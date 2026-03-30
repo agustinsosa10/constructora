@@ -102,6 +102,8 @@ La página principal es una sola página con secciones ancla. Cada proyecto tien
 
 ### Página de detalle de proyecto
 
+-La pagina de los proyectos debe estar basada en la pagina https://proyectonorte.com.ar , pero no debe ser igual. Con basada me refiero a las metricas, mapas, etc
+
 | Bloque | Descripción |
 |---|---|
 | **Hero** | Imagen principal full-width, nombre y badge de estado |
