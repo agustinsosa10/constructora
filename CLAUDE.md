@@ -1,32 +1,34 @@
 # CLAUDE.md — IES Desarrollos Inmobiliarios
 
-Sitio web para IES Desarrollos Inmobiliarios, constructora/inmobiliaria de Salta Capital.
-Desarrollado por Antigravity.
+Sitio web para IES Desarrollos Inmobiliarios, constructora/inmobiliaria de Salta Capital. Tomando como referencia a agroupsalta y proyectonorte, pero sin copiar el diseño ni los estilos, solo tomando como referencia como esta hecha la web y que metricas usa para los proyectos. El requisito clave es que el cliente pueda gestionar sus propios proyectos sin depender de un desarrollador, por lo que se incorpora Sanity como CMS headless.
 
 ---
 
 ## Stack
 
-- **Framework:** Next.js 15 (App Router)
+- **Framework:** Next.js 16.2.1 (App Router)
 - **Estilos:** Tailwind CSS v4
-- **CMS:** Sanity v3 (Fase 2 — aún no implementado)
+- **CMS:** Sanity v3 (Fase 2 — pendiente)
 - **Imágenes:** `next/image`
 - **Formulario:** Resend (envío de emails)
 - **Mapa:** Google Maps Embed API
 - **Deploy:** Vercel
-- **Package manager:** pnpm
+- **Package manager:** npm
 
 ## Arquitectura
 
 ```
 /app
+  layout.tsx                  # Root layout (Montserrat, metadata, globals.css)
+  globals.css                 # Variables de marca + Tailwind v4
   page.tsx                    # One-page: Hero + Proyectos + Nosotros + Contacto
-  /proyectos/[slug]/page.tsx  # Detalle de cada proyecto
-/components                   # Componentes React reutilizables
+  /proyectos/[slug]/
+    page.tsx                  # Detalle de cada proyecto
+/components                   # Componentes React reutilizables (a crear)
 /data
-  proyectos.ts                # Datos hardcodeados (Fase 1, antes de Sanity)
+  proyectos.ts                # Datos hardcodeados — Fase 1 (a crear)
 /public
-  /logos                      # Logos de IES (positivo, negativo, solo)
+  /logos                      # Logos de IES (positivo, negativo, solo, monocromo)
 ```
 
 ## Convenciones
@@ -50,6 +52,10 @@ Desarrollado por Antigravity.
 Logos disponibles en `/public/logos/`:
 - `logo-positivo.png` — sobre fondo blanco
 - `logo-negativo.png` — sobre fondo oscuro (hero, footer)
+- `logo-solo-positivo.png` — isotipo solo, fondo blanco
+- `logo-solo-negativo.png` — isotipo solo, fondo oscuro
+- `logo-monocromo-positivo.png` — versión monocromática clara
+- `logo-monocromo-negativo.png` — versión monocromática oscura
 
 ## Páginas y secciones
 
@@ -70,6 +76,10 @@ Logos disponibles en `/public/logos/`:
 8. Plano maestro (carousel)
 9. Google Maps embebido
 10. Formulario de contacto final
+
+## Fase 1 — Diseño y frontend (activa)
+
+Desarrollo del frontend completo con datos hardcodeados. Sin dependencia de Sanity.
 
 ## Datos — Fase 1 (hardcodeados)
 
@@ -104,7 +114,7 @@ type Proyecto = {
 
 ## Fase 2 — Sanity (pendiente)
 
-Cuando la constructora tenga el contenido listo:
+Cuando el frontend esté listo y la constructora tenga el contenido:
 - Instalar Sanity v3, definir schemas basados en el tipo `Proyecto` de arriba
 - Reemplazar imports de `/data/proyectos.ts` por GROQ queries
 - Agregar ISR con `revalidate` por webhook de Sanity
