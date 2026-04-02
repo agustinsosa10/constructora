@@ -4,16 +4,25 @@ import ProyectosCarousel from "@/components/ProyectosCarousel";
 import NosotrosSection from "@/components/NosotrosSection";
 import ContactoSection from "@/components/ContactoSection";
 import Footer from "@/components/Footer";
+import ScrollReveal from "@/components/ScrollReveal";
 
 export default function Home() {
   return (
     <>
       <Navbar />
       <HeroSection />
-      <ProyectosCarousel />
-      <NosotrosSection />
-      <ContactoSection />
-      <Footer />
+      <ScrollReveal>
+        <ProyectosCarousel />
+      </ScrollReveal>
+      <ScrollReveal>
+        <NosotrosSection />
+      </ScrollReveal>
+      <ScrollReveal>
+        <ContactoSection />
+      </ScrollReveal>
+      <ScrollReveal>
+        <Footer />
+      </ScrollReveal>
     </>
   );
 }
