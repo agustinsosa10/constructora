@@ -23,7 +23,7 @@ export default function ScrollReveal({ children, className = "", delay = 0 }: Pr
           observer.disconnect();
         }
       },
-      { threshold: 0.08 }
+      { threshold: 0 }
     );
 
     observer.observe(el);
@@ -36,8 +36,8 @@ export default function ScrollReveal({ children, className = "", delay = 0 }: Pr
       className={className}
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(60px)",
-        transition: `opacity 1s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 1s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
+        transform: visible ? "translateY(0) scale(1)" : "translateY(80px) scale(0.97)",
+        transition: `opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 1.1s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
       }}
     >
       {children}
