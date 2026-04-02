@@ -12,10 +12,10 @@ export default function Home() {
       <Navbar />
       <HeroSection />
       <ScrollReveal>
-        <ProyectosCarousel />
+        <NosotrosSection />
       </ScrollReveal>
       <ScrollReveal>
-        <NosotrosSection />
+        <ProyectosCarousel />
       </ScrollReveal>
       <ScrollReveal>
         <ContactoSection />
