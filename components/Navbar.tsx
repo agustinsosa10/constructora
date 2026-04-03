@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Navbar() {
+export default function Navbar({ alwaysDark }: { alwaysDark?: boolean } = {}) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -13,16 +13,18 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const isDark = alwaysDark || scrolled;
+
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-[#1A1A1A] shadow-lg" : "bg-transparent"
+        isDark ? "bg-[#1A1A1A] shadow-lg" : "bg-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div className="max-w-[1440px] mx-auto px-6 h-18 flex items-center justify-between">
         <Link href="/">
           <Image
-            src="/logos/logo-negativo.png"
+            src="/logos/logo-positivo.png"
             alt="IES Desarrollos Inmobiliarios"
             width={120}
             height={40}
@@ -32,14 +34,15 @@ export default function Navbar() {
         </Link>
 
         <div className="hidden md:flex items-center gap-8 text-white text-sm font-semibold tracking-wide">
-          <Link href="/#proyectos" className="hover:text-[#C41230] transition-colors">
-            Proyectos
+
+          <Link href="/#hero" className="hover:text-[#C41230] transition-colors">
+            Inicio
           </Link>
           <Link href="/#nosotros" className="hover:text-[#C41230] transition-colors">
             Nosotros
           </Link>
-          <Link href="/#contacto" className="hover:text-[#C41230] transition-colors">
-            Contacto
+          <Link href="/#proyectos" className="hover:text-[#C41230] transition-colors">
+            Proyectos
           </Link>
           <Link
             href="/#contacto"

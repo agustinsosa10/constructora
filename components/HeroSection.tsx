@@ -1,23 +1,39 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-start bg-[#1A1A1A] overflow-hidden"
+      className="relative min-h-[100vh] overflow-hidden"
     >
-      {/* Background overlay — replace with next/image when real photo available */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#1A1A1A] via-[#1A1A1A]/80 to-transparent z-10" />
-      <div className="absolute inset-0 bg-[#2a2a2a]" /> {/* placeholder bg */}
+      {/* Placeholder bg — reemplazar con next/image cuando haya foto real */}
+      <div className="absolute inset-0 bg-[#2a2a2a]" />
 
-      <div className="relative z-20 max-w-7xl mx-auto px-6 md:px-12 py-32">
-        <p className="text-[#C41230] text-xs font-bold tracking-[0.3em] uppercase mb-4">
+      <Image
+        src="/hero.jpg"
+        fill
+        className="object-cover"
+        priority
+        alt="Proyecto IES Desarrollos"
+      />
+     
+
+      {/* Overlay sutil para dar profundidad a la imagen */}
+      <div className="absolute inset-0 bg-black/25 z-10" />
+
+      {/* Gradiente inferior — de transparente a oscuro */}
+      <div className="absolute bottom-0 left-0 right-0 h-[65%] bg-gradient-to-t from-[#1A1A1A] via-[#1A1A1A]/70 to-transparent z-20" />
+
+      {/* Contenido sobre la banda inferior */}
+      <div className="absolute bottom-0 left-0 right-0 z-30 max-w-[1440px] mx-auto px-6 md:px-12 pb-16 md:pb-24">
+        <p className="text-[#C41230] text-xs font-bold tracking-[0.3em] uppercase mb-3">
           Salta Capital
         </p>
-        <h1 className="text-white font-extrabold tracking-tight leading-none text-5xl md:text-7xl lg:text-8xl mb-6 max-w-2xl">
+        <h1 className="text-white font-extrabold tracking-tight leading-none text-5xl md:text-7xl lg:text-8xl mb-5 max-w-3xl">
           Construimos<br />el futuro<br />de Salta
         </h1>
-        <p className="text-white/70 text-lg md:text-xl max-w-md mb-10 leading-relaxed">
+        <p className="text-white/70 text-base md:text-lg max-w-md mb-8 leading-relaxed">
           Desarrollos residenciales, urbanizaciones y espacios comerciales
           pensados para Salta Capital.
         </p>
