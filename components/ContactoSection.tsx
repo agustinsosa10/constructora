@@ -32,9 +32,17 @@ export default function ContactoSection() {
           {/* Left: map + contact info */}
           <ScrollReveal delay={100}>
             <div>
-              {/* Google Maps embed placeholder */}
-              <div className="w-full aspect-video bg-[#d8d6d3] mb-8 flex items-center justify-center">
-                <p className="text-[#595959]/50 text-sm">Google Maps</p>
+              {/* Google Maps embed */}
+              <div className="w-full aspect-video mb-8">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3622.517939830691!2d-65.40860242463184!3d-24.77771217798342!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x941bc3eb795a3cf1%3A0x73da9b4df4d3d24e!2sIES%20Desarrollos%20Inmobiliarios!5e0!3m2!1ses-419!2sar!4v1775310137571!5m2!1ses-419!2sar"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
               </div>
 
               <div className="space-y-4">

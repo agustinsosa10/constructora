@@ -15,6 +15,7 @@ export type Proyecto = {
   imagenHero: string;
   brochureUrl?: string;
   superficie: string;
+  m2Totales: number;
   pisos: number;
   unidades: number;
   amenities: { icono: string; label: string }[];
@@ -38,6 +39,7 @@ export const proyectos: Proyecto[] = [
       "Tower One es un desarrollo residencial de alta gama ubicado en el microcentro salteño. Ofrece departamentos de 1, 2 y 3 dormitorios con vistas panorámicas a la ciudad y el Cerro San Bernardo.",
     imagenHero: "/proyectos/IES11_imgprinc.jpg",
     superficie: "65–120 m²",
+    m2Totales: 6840,
     pisos: 18,
     unidades: 72,
     amenities: [
@@ -58,7 +60,7 @@ export const proyectos: Proyecto[] = [
       { foto: "/proyectos/IES11_imgprinc.jpg", label: "Lobby" },
       { foto: "/proyectos/IES14_imgprinc.jpg", label: "Piscina" },
     ],
-    planoMaestro: ["/proyectos/images.jpeg"],
+    planoMaestro: ["/proyectos/30-191112-plano-con-paisajismo-scaled.jpg"],
     ubicacion: {
       direccion: "Av. Entre Ríos 200, Salta Capital",
       lat: -24.7859,
@@ -84,6 +86,7 @@ export const proyectos: Proyecto[] = [
       "Urbanización cerrada con lotes de 400 a 800 m² rodeados de espacios verdes. Infraestructura completa: agua, gas, electricidad y acceso pavimentado.",
     imagenHero: "/proyectos/IES14_imgprinc.jpg",
     superficie: "400–800 m²",
+    m2Totales: 28800,
     pisos: 1,
     unidades: 48,
     amenities: [
@@ -104,7 +107,7 @@ export const proyectos: Proyecto[] = [
       { foto: "/proyectos/IES14_imgprinc.jpg", label: "Ingreso" },
       { foto: "/proyectos/images.jpeg", label: "Espacios verdes" },
     ],
-    planoMaestro: ["/proyectos/images.jpeg"],
+    planoMaestro: ["/proyectos/30-191112-plano-con-paisajismo-scaled.jpg"],
     ubicacion: {
       direccion: "Ruta 51 km 12, Salta Capital",
       lat: -24.8102,
@@ -115,6 +118,7 @@ export const proyectos: Proyecto[] = [
   },
   {
     slug: "centro-comercial-norte",
+
     nombre: "Centro Comercial Norte",
     categoria: "Comercial",
     estado: "Proximo lanzamiento",
@@ -124,6 +128,7 @@ export const proyectos: Proyecto[] = [
       "Complejo comercial moderno con locales de distintos rubros, oficinas y estacionamiento para 200 vehículos. Zona de alto tráfico peatonal y vehicular.",
     imagenHero: "/proyectos/images.jpeg",
     superficie: "40–200 m²",
+    m2Totales: 4200,
     pisos: 3,
     unidades: 35,
     amenities: [
@@ -141,7 +146,7 @@ export const proyectos: Proyecto[] = [
     instalaciones: [
       { foto: "/proyectos/images.jpeg", label: "Fachada" },
     ],
-    planoMaestro: ["/proyectos/IES11_imgprinc.jpg"],
+    planoMaestro: ["/proyectos/30-191112-plano-con-paisajismo-scaled.jpg"],
     ubicacion: {
       direccion: "Av. Virrey Toledo 1500, Salta Capital",
       lat: -24.7721,
@@ -151,3 +156,22 @@ export const proyectos: Proyecto[] = [
     fasesObra: [],
   },
 ];
+
+export const ANIO_FUNDACION = 2014;
+
+export function calcularMetricas(lista: Proyecto[]) {
+  const anioActual = new Date().getFullYear();
+  const aniosTrayectoria = anioActual - ANIO_FUNDACION;
+
+  const enConstruccion = lista.filter((p) => p.estado === "En construccion");
+  const entregados = lista.filter((p) => p.estado === "Entregado");
+
+  const m2EnDesarrollo = enConstruccion.reduce((acc, p) => acc + p.m2Totales, 0);
+  return {
+    aniosTrayectoria,
+    m2EnDesarrollo,
+    proyectosEnDesarrollo: enConstruccion.length,
+    proyectosEntregados: entregados.length,
+    obrasEnEjecucion: enConstruccion.length,
+  };
+}

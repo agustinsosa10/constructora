@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
-import Navbar from "@/components/Navbar";
 import ScrollReveal from "@/components/ScrollReveal";
 import { proyectos, Proyecto } from "@/data/proyectos";
 
@@ -29,7 +28,7 @@ function getAmenityIcon(key: string): string {
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 function estadoLabel(estado: Proyecto["estado"]): string {
-  if (estado === "En construccion") return "En construcción";
+  if (estado === "En construccion") return "En desarrollo";
   if (estado === "Proximo lanzamiento") return "Próximo lanzamiento";
   return "Entregado";
 }
@@ -67,6 +66,7 @@ function SubnavSticky({
   showAvance: boolean;
 }) {
   const [activeId, setActiveId] = useState("descripcion");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const ids = SECTIONS.filter(
@@ -88,7 +88,17 @@ function SubnavSticky({
       observers.push(obs);
     });
 
-    return () => observers.forEach((o) => o.disconnect());
+    function onScroll() {
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 80) {
+        setActiveId("contacto");
+      }
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      observers.forEach((o) => o.disconnect());
+      window.removeEventListener("scroll", onScroll);
+    };
   }, [showAvance]);
 
   const visibleSections = SECTIONS.filter(
@@ -98,22 +108,36 @@ function SubnavSticky({
   function scrollTo(id: string) {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setActiveId(id);
+    setMenuOpen(false);
   }
 
+  const activeLabel = visibleSections.find((s) => s.id === activeId)?.label ?? visibleSections[0]?.label;
+
   return (
-    <div className="sticky top-[72px] z-[90] bg-white border-b border-[#e8e8e8]">
-      <div className="max-w-7xl mx-auto px-6 md:px-16 flex items-center justify-between">
-        <div className="flex">
-          {visibleSections.map((s, i) => (
+    <div className="fixed top-0 left-0 right-0 z-50 bg-[#1A1A1A] border-b border-white/10">
+      <div className="max-w-[1440px] mx-auto px-6 md:px-12 h-[72px] flex items-center justify-between gap-6">
+        {/* Logo */}
+        <Link href="/" className="flex-shrink-0">
+          <Image
+            src="/logos/logo-negativo.png"
+            alt="IES Desarrollos Inmobiliarios"
+            width={120}
+            height={40}
+            className="h-8 w-auto object-contain"
+            priority
+          />
+        </Link>
+
+        {/* Secciones — desktop */}
+        <div className="hidden lg:flex items-center overflow-x-auto scrollbar-none flex-1 justify-end">
+          {visibleSections.map((s) => (
             <button
               key={s.id}
               onClick={() => scrollTo(s.id)}
-              className={`relative py-4 text-[10px] font-bold tracking-[1.5px] uppercase transition-colors duration-150 cursor-pointer ${
-                i === 0 ? "pr-5" : "px-5"
-              } ${
+              className={`relative h-[72px] px-4 text-[10px] font-bold tracking-[1.5px] uppercase transition-colors duration-150 cursor-pointer whitespace-nowrap flex-shrink-0 ${
                 activeId === s.id
-                  ? "text-[#1A1A1A]"
-                  : "text-[#aaa] hover:text-[#555]"
+                  ? "text-white"
+                  : "text-white/40 hover:text-white/70"
               }`}
             >
               {s.label}
@@ -124,19 +148,73 @@ function SubnavSticky({
           ))}
         </div>
 
-        {proyecto.brochureUrl && (
+        {/* Sección activa — mobile (center) */}
+        <div className="lg:hidden flex-1 text-center">
+          <span className="text-[10px] font-bold tracking-[1.5px] uppercase text-white/60">
+            {activeLabel}
+          </span>
+        </div>
+
+        {/* Brochure — desktop */}
+        {proyecto.brochureUrl ? (
           <a
             href={proyecto.brochureUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-[10px] font-bold tracking-[1px] uppercase text-[#C41230] hover:text-red-800 transition-colors"
+            className="hidden lg:flex flex-shrink-0 items-center gap-2 text-[10px] font-bold tracking-[1px] uppercase text-[#C41230] hover:text-red-400 transition-colors"
           >
             <span className="w-7 h-7 border border-[#C41230] flex items-center justify-center text-xs">
               ↓
             </span>
             Brochure
           </a>
-        )}
+        ) : null}
+
+        {/* Hamburger — mobile */}
+        <button
+          className="lg:hidden flex flex-col justify-center items-center w-10 h-10 gap-[5px] flex-shrink-0 cursor-pointer"
+          onClick={() => setMenuOpen((v) => !v)}
+          aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+        >
+          <span className={`block w-5 h-[2px] bg-white transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-[7px]" : ""}`} />
+          <span className={`block w-5 h-[2px] bg-white transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
+          <span className={`block w-5 h-[2px] bg-white transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-[7px]" : ""}`} />
+        </button>
+      </div>
+
+      {/* Mobile dropdown */}
+      <div
+        className={`lg:hidden bg-[#1A1A1A] border-t border-white/10 overflow-hidden transition-all duration-300 ${
+          menuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="flex flex-col px-6 py-2">
+          {visibleSections.map((s) => (
+            <button
+              key={s.id}
+              onClick={() => scrollTo(s.id)}
+              className={`flex items-center justify-between py-3.5 border-b border-white/10 text-[11px] font-bold tracking-[1.5px] uppercase transition-colors text-left cursor-pointer ${
+                activeId === s.id ? "text-[#C41230]" : "text-white/50 hover:text-white"
+              }`}
+            >
+              {s.label}
+              {activeId === s.id && <span className="w-1.5 h-1.5 rounded-full bg-[#C41230]" />}
+            </button>
+          ))}
+
+          {proyecto.brochureUrl && (
+            <a
+              href={proyecto.brochureUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center gap-2 py-4 text-[11px] font-bold tracking-[1px] uppercase text-[#C41230] hover:text-red-400 transition-colors"
+            >
+              <span className="w-6 h-6 border border-[#C41230] flex items-center justify-center text-xs">↓</span>
+              Descargar Brochure
+            </a>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -172,7 +250,7 @@ function SecDescripcion({ proyecto }: { proyecto: Proyecto }) {
   return (
     <section
       id="descripcion"
-      className="scroll-mt-[130px] bg-white px-6 md:px-16 py-18"
+      className="scroll-mt-[72px] bg-white px-6 md:px-16 py-18"
     >
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 items-start">
         {/* Texto */}
@@ -262,7 +340,7 @@ function SecAvance({ proyecto }: { proyecto: Proyecto }) {
   return (
     <section
       id="avance"
-      className="scroll-mt-[130px] bg-[#F5F4F2] px-6 md:px-16 py-18"
+      className="scroll-mt-[72px] bg-[#F5F4F2] px-6 md:px-16 py-18"
     >
       <div className="max-w-7xl mx-auto">
         <ScrollReveal delay={0}>
@@ -337,7 +415,7 @@ function SecAmenities({ proyecto }: { proyecto: Proyecto }) {
   return (
     <section
       id="amenities"
-      className="scroll-mt-[130px] bg-white px-6 md:px-16 py-18"
+      className="scroll-mt-[72px] bg-white px-6 md:px-16 py-18"
     >
       <div className="max-w-7xl mx-auto">
         <ScrollReveal delay={0}>
@@ -466,7 +544,7 @@ function SecGaleria({ proyecto }: { proyecto: Proyecto }) {
   return (
     <section
       id="galeria"
-      className="scroll-mt-[130px] bg-[#F5F4F2] px-6 md:px-16 py-18"
+      className="scroll-mt-[72px] bg-[#F5F4F2] px-6 md:px-16 py-18"
     >
       <div className="max-w-7xl mx-auto">
         <ScrollReveal delay={0}>
@@ -539,30 +617,51 @@ function SecGaleria({ proyecto }: { proyecto: Proyecto }) {
 }
 
 function SecPlano({ proyecto }: { proyecto: Proyecto }) {
-  const plano = proyecto.planoMaestro[0];
+  const images = proyecto.planoMaestro;
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const close = useCallback(() => setLightboxIndex(null), []);
+  const prev = useCallback(() => setLightboxIndex((i) => (i !== null && i > 0 ? i - 1 : i)), []);
+  const next = useCallback(() => setLightboxIndex((i) => (i !== null && i < images.length - 1 ? i + 1 : i)), [images.length]);
+
   return (
     <section
       id="plano"
-      className="scroll-mt-[130px] bg-white px-6 md:px-16 py-18"
+      className="scroll-mt-[72px] bg-white px-6 md:px-16 py-18"
     >
       <div className="max-w-7xl mx-auto">
         <ScrollReveal delay={0}>
           <SectionHeader label="Plano maestro" title="Vista del desarrollo" />
         </ScrollReveal>
         <ScrollReveal delay={100}>
-        <div className="relative w-full aspect-[16/7] overflow-hidden bg-[#e8e4dc]">
-          {plano && (
+        <div
+          className="relative w-full aspect-[16/7] overflow-hidden bg-[#e8e4dc] cursor-zoom-in group"
+          onClick={() => images[0] && setLightboxIndex(0)}
+        >
+          {images[0] && (
             <Image
-              src={plano}
+              src={images[0]}
               alt={`${proyecto.nombre} — plano maestro`}
               fill
-              className="object-cover"
+              className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
               sizes="100vw"
             />
           )}
+          <div className="absolute bottom-4 right-4 bg-black/50 text-white text-[10px] font-bold tracking-[1.5px] uppercase px-3 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+            Ver plano
+          </div>
         </div>
         </ScrollReveal>
       </div>
+
+      {lightboxIndex !== null && (
+        <Lightbox
+          images={images}
+          index={lightboxIndex}
+          onClose={close}
+          onPrev={prev}
+          onNext={next}
+        />
+      )}
     </section>
   );
 }
@@ -574,7 +673,7 @@ function SecUbicacion({ proyecto }: { proyecto: Proyecto }) {
   return (
     <section
       id="ubicacion"
-      className="scroll-mt-[130px] bg-[#F5F4F2] px-6 md:px-16 py-18"
+      className="scroll-mt-[72px] bg-[#F5F4F2] px-6 md:px-16 py-18"
     >
       <div className="max-w-7xl mx-auto">
         <ScrollReveal delay={0}>
@@ -619,7 +718,7 @@ function SecContacto({ proyecto }: { proyecto: Proyecto }) {
   return (
     <section
       id="contacto"
-      className="scroll-mt-[130px] bg-[#1A1A1A] px-6 md:px-16 py-18"
+      className="scroll-mt-[72px] bg-[#1A1A1A] px-6 md:px-16 py-18"
     >
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20">
         <ScrollReveal delay={0}>
@@ -686,10 +785,10 @@ export default function ProyectoSlugPage() {
 
   return (
     <>
-      <Navbar alwaysDark />
+      <SubnavSticky proyecto={proyecto} showAvance={showAvance} />
 
       {/* Hero */}
-      <div className="relative h-[580px] bg-[#1A1A1A]">
+      <div className="relative h-[860px] mt-[72px] bg-[#1A1A1A]">
         <Image
           src={proyecto.imagenHero}
           alt={proyecto.nombre}
@@ -704,29 +803,36 @@ export default function ProyectoSlugPage() {
         {/* Contenido */}
         <div className="absolute bottom-0 left-0 right-0 px-6 md:px-16 pb-12 z-10">
           {/* Categoría + estado */}
-          <div className="flex items-center gap-3 mb-4">
-            <span className="text-white/50 text-[10px] font-bold tracking-[2.5px] uppercase">
-              {proyecto.categoria === "Urbanizacion"
-                ? "Urbanización"
-                : proyecto.categoria}
-            </span>
-            <div className="w-1 h-1 rounded-full bg-[#C41230]" />
-            <span className="text-[9px] font-bold tracking-[1.5px] uppercase px-2.5 py-1 text-white bg-[#C41230]">
-              {estadoLabel(proyecto.estado)}
-            </span>
-          </div>
+          <ScrollReveal delay={0}>
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-white/50 text-[10px] font-bold tracking-[2.5px] uppercase">
+                {proyecto.categoria === "Urbanizacion"
+                  ? "Urbanización"
+                  : proyecto.categoria}
+              </span>
+              <div className="w-1 h-1 rounded-full bg-[#C41230]" />
+              <span className="text-[9px] font-bold tracking-[1.5px] uppercase px-2.5 py-1 text-white bg-[#C41230]">
+                {estadoLabel(proyecto.estado)}
+              </span>
+            </div>
+          </ScrollReveal>
 
           {/* Título */}
-          <h1 className="text-[54px] md:text-[60px] font-extrabold text-white tracking-[-2px] leading-[0.95] mb-4">
-            {proyecto.nombre}
-          </h1>
+          <ScrollReveal delay={120}>
+            <h1 className="text-[54px] md:text-[60px] font-extrabold text-white tracking-[-2px] leading-[0.95] mb-4">
+              {proyecto.nombre}
+            </h1>
+          </ScrollReveal>
 
           {/* Tagline */}
-          <p className="text-white/55 text-[15px] mb-8 max-w-lg">
-            {proyecto.tagline}
-          </p>
+          <ScrollReveal delay={240}>
+            <p className="text-white/55 text-[15px] mb-8 max-w-lg">
+              {proyecto.tagline}
+            </p>
+          </ScrollReveal>
 
           {/* Métricas + CTAs */}
+          <ScrollReveal delay={360}>
           <div className="flex gap-10 items-center flex-wrap">
             <div className="flex flex-col gap-1">
               <span className="text-white/35 text-[9px] font-bold tracking-[2px] uppercase">
@@ -778,11 +884,9 @@ export default function ProyectoSlugPage() {
               )}
             </div>
           </div>
+          </ScrollReveal>
         </div>
       </div>
-
-      {/* Subnav sticky */}
-      <SubnavSticky proyecto={proyecto} showAvance={showAvance} />
 
       {/* Secciones */}
       <main>

@@ -8,13 +8,13 @@ import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import { proyectos, Proyecto } from "@/data/proyectos";
 
-type Categoria = "Urbanizacion" | "Residencial" | "Comercial";
-type EstadoFiltro = "desarrollo" | "entregados";
+type EstadoTab = "Todos" | "Proximo lanzamiento" | "En construccion" | "Entregado";
 
-const CATEGORIAS: { key: Categoria; label: string }[] = [
-  { key: "Urbanizacion", label: "Urbanizaciones" },
-  { key: "Residencial", label: "Residencial" },
-  { key: "Comercial", label: "Comercial" },
+const TABS: { key: EstadoTab; label: string }[] = [
+  { key: "Todos", label: "Todos" },
+  { key: "Proximo lanzamiento", label: "Próximamente" },
+  { key: "En construccion", label: "En desarrollo" },
+  { key: "Entregado", label: "Entregado" },
 ];
 
 function getGridCols(count: number): string {
@@ -23,27 +23,10 @@ function getGridCols(count: number): string {
   return "grid-cols-3";
 }
 
-function StatusPill({ estado }: { estado: Proyecto["estado"] }) {
-  if (estado === "En construccion") {
-    return (
-      <span className="text-[9px] font-bold tracking-[1.5px] uppercase px-2.5 py-1 text-white bg-[#C41230]">
-        En construcción
-      </span>
-    );
-  }
-  if (estado === "Proximo lanzamiento") {
-    return (
-      <span className="text-[9px] font-bold tracking-[1.5px] uppercase px-2.5 py-1 text-white bg-black/50 border border-white/25">
-        Próximo lanzamiento
-      </span>
-    );
-  }
-  return null;
-}
-
-function ProyectoCard({ proyecto, entregado }: { proyecto: Proyecto; entregado: boolean }) {
+function ProyectoCard({ proyecto }: { proyecto: Proyecto }) {
+  const entregado = proyecto.estado === "Entregado";
   return (
-    <Link href={`/proyectos/${proyecto.slug}`} className="group block">
+    <Link href={`/proyectos/${proyecto.slug}`} target="_blank" rel="noopener noreferrer" className="group block">
       <div className="relative overflow-hidden cursor-pointer bg-[#1a1a1a] aspect-[3/4]">
         {/* Imagen */}
         <div className="absolute inset-0">
@@ -60,13 +43,6 @@ function ProyectoCard({ proyecto, entregado }: { proyecto: Proyecto; entregado: 
 
         {/* Overlay degradado */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
-
-        {/* Pill de estado (esquina superior izquierda) */}
-        {!entregado && (
-          <div className="absolute top-4 left-4">
-            <StatusPill estado={proyecto.estado} />
-          </div>
-        )}
 
         {/* Flecha (esquina superior derecha, aparece en hover) */}
         <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/12 flex items-center justify-center text-white text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -90,38 +66,11 @@ function ProyectoCard({ proyecto, entregado }: { proyecto: Proyecto; entregado: 
 }
 
 export default function ProyectosPage() {
-  const [categoriaActiva, setCategoriaActiva] = useState<Categoria>("Urbanizacion");
-  const [estadoPorCategoria, setEstadoPorCategoria] = useState<Record<Categoria, EstadoFiltro>>({
-    Urbanizacion: "desarrollo",
-    Residencial: "desarrollo",
-    Comercial: "desarrollo",
-  });
+  const [tabActiva, setTabActiva] = useState<EstadoTab>("Todos");
 
-  const estadoActivo = estadoPorCategoria[categoriaActiva];
-
-  const proyectosFiltrados = proyectos.filter((p) => {
-    if (p.categoria !== categoriaActiva) return false;
-    if (estadoActivo === "desarrollo") {
-      return p.estado === "En construccion" || p.estado === "Proximo lanzamiento";
-    }
-    return p.estado === "Entregado";
-  });
-
-  const totalDesarrollo = proyectos.filter(
-    (p) =>
-      p.categoria === categoriaActiva &&
-      (p.estado === "En construccion" || p.estado === "Proximo lanzamiento")
-  ).length;
-
-  const totalEntregados = proyectos.filter(
-    (p) => p.categoria === categoriaActiva && p.estado === "Entregado"
-  ).length;
-
-  const count = estadoActivo === "desarrollo" ? totalDesarrollo : totalEntregados;
-
-  function setEstado(estado: EstadoFiltro) {
-    setEstadoPorCategoria((prev) => ({ ...prev, [categoriaActiva]: estado }));
-  }
+  const proyectosFiltrados =
+    tabActiva === "Todos" ? proyectos : proyectos.filter((p) => p.estado === tabActiva);
+  const count = proyectosFiltrados.length;
 
   return (
     <>
@@ -141,27 +90,25 @@ export default function ProyectosPage() {
 
           {/* Título */}
           <ScrollReveal delay={0}>
-            <h1
-              className="text-[42px] md:text-[52px] font-extrabold text-[#1A1A1A] leading-none tracking-[-1.5px] mb-10"
-            >
+            <h1 className="text-[42px] md:text-[52px] font-extrabold text-[#1A1A1A] leading-none tracking-[-1.5px] mb-10">
               Nuestros
               <br />
               desarrollos
             </h1>
           </ScrollReveal>
 
-          {/* Tabs nivel 1 — categorías */}
+          {/* Tabs — estado */}
           <div className="flex border-b border-[#e8e8e8]">
-            {CATEGORIAS.map(({ key, label }) => (
+            {TABS.map(({ key, label }) => (
               <button
                 key={key}
-                onClick={() => setCategoriaActiva(key)}
+                onClick={() => setTabActiva(key)}
                 className={`relative py-3.5 pr-8 text-[11px] font-bold tracking-[2px] uppercase transition-colors duration-150 cursor-pointer ${
-                  categoriaActiva === key ? "text-[#1A1A1A]" : "text-[#aaa] hover:text-[#555]"
-                } ${key === "Urbanizacion" ? "pl-0" : "pl-0"}`}
+                  tabActiva === key ? "text-[#1A1A1A]" : "text-[#aaa] hover:text-[#555]"
+                }`}
               >
                 {label}
-                {categoriaActiva === key && (
+                {tabActiva === key && (
                   <span className="absolute bottom-[-1px] left-0 right-8 h-[2px] bg-[#C41230]" />
                 )}
               </button>
@@ -171,40 +118,14 @@ export default function ProyectosPage() {
 
         {/* Contenido */}
         <div className="bg-white px-8 md:px-16 pb-20">
-          {/* Header de estado */}
-          <div className="flex items-center justify-between py-10">
-            <div className="flex items-baseline gap-3">
-              <span className="text-[11px] font-extrabold tracking-[3px] uppercase text-[#999]">
-                {estadoActivo === "desarrollo" ? "En desarrollo" : "Entregados"}
-              </span>
-              <span className="text-[10px] font-bold text-[#C41230]">
-                {count} {count === 1 ? "proyecto" : "proyectos"}
-              </span>
-            </div>
-
-            {/* Toggle nivel 2 */}
-            <div className="flex border border-[#e0e0e0] overflow-hidden">
-              <button
-                onClick={() => setEstado("desarrollo")}
-                className={`px-5 py-2.5 text-[10px] font-bold tracking-[1.5px] uppercase transition-all duration-150 cursor-pointer ${
-                  estadoActivo === "desarrollo"
-                    ? "bg-[#1A1A1A] text-white"
-                    : "bg-white text-[#aaa] hover:bg-[#f5f5f5] hover:text-[#555]"
-                }`}
-              >
-                En desarrollo
-              </button>
-              <button
-                onClick={() => setEstado("entregados")}
-                className={`px-5 py-2.5 text-[10px] font-bold tracking-[1.5px] uppercase transition-all duration-150 cursor-pointer ${
-                  estadoActivo === "entregados"
-                    ? "bg-[#1A1A1A] text-white"
-                    : "bg-white text-[#aaa] hover:bg-[#f5f5f5] hover:text-[#555]"
-                }`}
-              >
-                Entregados
-              </button>
-            </div>
+          {/* Contador */}
+          <div className="flex items-baseline gap-3 py-10">
+            <span className="text-[11px] font-extrabold tracking-[3px] uppercase text-[#999]">
+              {TABS.find((t) => t.key === tabActiva)?.label}
+            </span>
+            <span className="text-[10px] font-bold text-[#C41230]">
+              {count} {count === 1 ? "proyecto" : "proyectos"}
+            </span>
           </div>
 
           {/* Grid de cards */}
@@ -216,10 +137,7 @@ export default function ProyectosPage() {
             >
               {proyectosFiltrados.map((p, i) => (
                 <ScrollReveal key={p.slug} delay={i * 80}>
-                  <ProyectoCard
-                    proyecto={p}
-                    entregado={p.estado === "Entregado"}
-                  />
+                  <ProyectoCard proyecto={p} />
                 </ScrollReveal>
               ))}
             </div>
@@ -234,6 +152,5 @@ export default function ProyectosPage() {
       </main>
       <Footer />
     </>
-    
   );
 }

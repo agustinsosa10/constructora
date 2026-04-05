@@ -7,7 +7,7 @@ import { proyectos } from "@/data/proyectos";
 import ScrollReveal from "@/components/ScrollReveal";
 
 const ESTADO_BADGE: Record<string, string> = {
-  "En construccion": "En construcción",
+  "En construccion": "En desarrollo",
   "Entregado": "Entregado",
   "Proximo lanzamiento": "Próximo lanzamiento",
 };
@@ -88,7 +88,7 @@ export default function ProyectosCarousel() {
                 Desarrollos
               </p>
               <h2 className="text-[#1A1A1A] font-extrabold text-4xl md:text-5xl tracking-tight leading-none">
-                Donde vivís<br />importa
+                Nuestros desarrollos
               </h2>
             </div>
             <Link
@@ -117,6 +117,8 @@ export default function ProyectosCarousel() {
               <Link
                 key={`${proyecto.slug}-${i}`}
                 href={`/proyectos/${proyecto.slug}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="group relative overflow-hidden h-[480px] flex-shrink-0"
                 style={{
                   width: getWidth(i),
@@ -162,6 +164,8 @@ export default function ProyectosCarousel() {
         <div className="md:hidden">
           <Link
             href={`/proyectos/${proyectos[dotIndex].slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="group relative overflow-hidden h-[420px] block w-full"
           >
             <Image
