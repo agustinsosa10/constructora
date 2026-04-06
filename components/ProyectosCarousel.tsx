@@ -145,14 +145,13 @@ export default function ProyectosCarousel() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
 
                 <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
-                  <p className="text-[#C41230] text-xs font-bold tracking-widest uppercase mb-1">
-                    {proyecto.categoria}
-                  </p>
                   <h3 className="text-white font-extrabold text-xl md:text-2xl tracking-tight mb-1">
                     {proyecto.nombre}
                   </h3>
-                  <p className="text-white/60 text-xs font-medium">
-                    {ESTADO_BADGE[proyecto.estado]} · {proyecto.anioEntrega}
+                  <p className="text-xs font-semibold">
+                    <span className="text-[#C41230]">{ESTADO_BADGE[proyecto.estado]}</span>
+                    <span className="text-white/50"> · </span>
+                    <span className="text-white/60">{proyecto.anioEntrega}</span>
                   </p>
                 </div>
               </Link>
@@ -180,14 +179,13 @@ export default function ProyectosCarousel() {
             </div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
             <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
-              <p className="text-[#C41230] text-xs font-bold tracking-widest uppercase mb-1">
-                {proyectos[dotIndex].categoria}
-              </p>
               <h3 className="text-white font-extrabold text-xl tracking-tight mb-1">
                 {proyectos[dotIndex].nombre}
               </h3>
-              <p className="text-white/60 text-xs font-medium">
-                {ESTADO_BADGE[proyectos[dotIndex].estado]} · {proyectos[dotIndex].anioEntrega}
+              <p className="text-xs font-semibold">
+                <span className="text-[#C41230]">{ESTADO_BADGE[proyectos[dotIndex].estado]}</span>
+                <span className="text-white/50"> · </span>
+                <span className="text-white/60">{proyectos[dotIndex].anioEntrega}</span>
               </p>
             </div>
           </Link>

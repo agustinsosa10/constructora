@@ -7,7 +7,6 @@ export type FaseObra = {
 export type Proyecto = {
   slug: string;
   nombre: string;
-  categoria: "Residencial" | "Urbanizacion" | "Comercial";
   estado: "En construccion" | "Entregado" | "Proximo lanzamiento";
   anioEntrega: number;
   tagline: string;
@@ -31,7 +30,6 @@ export const proyectos: Proyecto[] = [
   {
     slug: "tower-one",
     nombre: "Tower One",
-    categoria: "Residencial",
     estado: "En construccion",
     anioEntrega: 2026,
     tagline: "Altura y diseño en el corazón de Salta",
@@ -78,7 +76,6 @@ export const proyectos: Proyecto[] = [
   {
     slug: "los-aromos",
     nombre: "Los Aromos",
-    categoria: "Urbanizacion",
     estado: "Entregado",
     anioEntrega: 2023,
     tagline: "Vivir en armonía con la naturaleza",
@@ -120,7 +117,6 @@ export const proyectos: Proyecto[] = [
     slug: "centro-comercial-norte",
 
     nombre: "Centro Comercial Norte",
-    categoria: "Comercial",
     estado: "Proximo lanzamiento",
     anioEntrega: 2027,
     tagline: "El nuevo polo comercial del norte salteño",

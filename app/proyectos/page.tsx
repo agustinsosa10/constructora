@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
@@ -10,63 +11,94 @@ import { proyectos, Proyecto } from "@/data/proyectos";
 
 type EstadoTab = "Todos" | "Proximo lanzamiento" | "En construccion" | "Entregado";
 
+const ESTADO_LABEL: Record<string, string> = {
+  "En construccion": "En desarrollo",
+  "Entregado": "Entregado",
+  "Proximo lanzamiento": "Próximamente",
+};
+
+const ESTADO_BADGE: Record<string, string> = {
+  "En construccion": "bg-[#C41230] text-white",
+  "Entregado": "bg-[#1A1A1A] text-white",
+  "Proximo lanzamiento": "border border-[#C41230] text-[#C41230]",
+};
+
 const TABS: { key: EstadoTab; label: string }[] = [
-  { key: "Todos", label: "Todos" },
+  { key: "Todos", label: "Ver todos" },
   { key: "Proximo lanzamiento", label: "Próximamente" },
   { key: "En construccion", label: "En desarrollo" },
-  { key: "Entregado", label: "Entregado" },
+  { key: "Entregado", label: "Entregados" },
 ];
 
-function getGridCols(count: number): string {
-  if (count === 1) return "grid-cols-1";
-  if (count === 2) return "grid-cols-2";
-  return "grid-cols-3";
-}
-
 function ProyectoCard({ proyecto }: { proyecto: Proyecto }) {
-  const entregado = proyecto.estado === "Entregado";
   return (
-    <Link href={`/proyectos/${proyecto.slug}`} target="_blank" rel="noopener noreferrer" className="group block">
-      <div className="relative overflow-hidden cursor-pointer bg-[#1a1a1a] aspect-[3/4]">
-        {/* Imagen */}
-        <div className="absolute inset-0">
-          <Image
-            src={proyecto.imagenHero}
-            alt={proyecto.nombre}
-            fill
-            className={`object-cover transition-transform duration-500 group-hover:scale-[1.03] ${
-              entregado ? "[filter:grayscale(35%)]" : ""
-            }`}
-            sizes="(max-width: 768px) 100vw, 33vw"
-          />
-        </div>
+    <Link
+      href={`/proyectos/${proyecto.slug}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group block w-full"
+    >
+      {/* Imagen */}
+      <div className="relative overflow-hidden aspect-[16/10] bg-[#1a1a1a]">
+        <Image
+          src={proyecto.imagenHero}
+          alt={proyecto.nombre}
+          fill
+          className={`object-cover transition-transform duration-500 group-hover:scale-[1.04] ${
+            proyecto.estado === "Entregado" ? "[filter:grayscale(35%)]" : ""
+          }`}
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        />
+      </div>
 
-        {/* Overlay degradado */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+      {/* Bloque de texto */}
+      <div className="pt-4 pb-5 border-b-2 border-transparent group-hover:border-[#C41230] transition-colors duration-300">
+        {/* Badge de estado */}
+        <span
+          className={`inline-block text-[9px] font-bold tracking-[2px] uppercase px-2 py-1 mb-3 ${
+            ESTADO_BADGE[proyecto.estado]
+          }`}
+        >
+          {ESTADO_LABEL[proyecto.estado]}
+        </span>
 
-        {/* Flecha (esquina superior derecha, aparece en hover) */}
-        <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/12 flex items-center justify-center text-white text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          →
-        </div>
+        {/* Nombre */}
+        <p className="text-[#1A1A1A] text-xl font-extrabold leading-tight tracking-tight mb-1">
+          {proyecto.nombre}
+        </p>
 
-        {/* Info inferior */}
-        <div className="absolute bottom-0 left-0 right-0 p-6">
-          <p className="text-white/45 text-[10px] font-semibold tracking-[2px] mb-1.5 uppercase">
-            {entregado
-              ? `Entregado ${proyecto.anioEntrega} · ${proyecto.categoria}`
-              : `Entrega ${proyecto.anioEntrega} · ${proyecto.categoria}`}
-          </p>
-          <p className="text-white text-lg font-extrabold leading-tight tracking-tight">
-            {proyecto.nombre}
-          </p>
-        </div>
+        {/* Dirección */}
+        <p className="text-[#999] text-xs mb-3 flex items-center gap-1">
+          <span>📍</span>
+          {proyecto.ubicacion.direccion}
+        </p>
+
+        {/* Stats */}
+        <p className="text-[10px] text-[#aaa] font-semibold tracking-wide">
+          {proyecto.superficie}
+          {" · "}
+          {proyecto.unidades} unidades
+          {" · "}
+          {proyecto.pisos} {proyecto.pisos === 1 ? "piso" : "pisos"}
+        </p>
       </div>
     </Link>
   );
 }
 
-export default function ProyectosPage() {
-  const [tabActiva, setTabActiva] = useState<EstadoTab>("Todos");
+const VALID_ESTADOS: EstadoTab[] = ["Todos", "Proximo lanzamiento", "En construccion", "Entregado"];
+
+function ProyectosContent() {
+  const searchParams = useSearchParams();
+  const estadoParam = searchParams.get("estado") as EstadoTab | null;
+  const initialTab = estadoParam && VALID_ESTADOS.includes(estadoParam) ? estadoParam : "Todos";
+  const [tabActiva, setTabActiva] = useState<EstadoTab>(initialTab);
+
+  useEffect(() => {
+    const param = searchParams.get("estado") as EstadoTab | null;
+    if (param && VALID_ESTADOS.includes(param)) setTabActiva(param);
+    else setTabActiva("Todos");
+  }, [searchParams]);
 
   const proyectosFiltrados =
     tabActiva === "Todos" ? proyectos : proyectos.filter((p) => p.estado === tabActiva);
@@ -98,12 +130,12 @@ export default function ProyectosPage() {
           </ScrollReveal>
 
           {/* Tabs — estado */}
-          <div className="flex border-b border-[#e8e8e8]">
+          <div className="flex overflow-x-auto scrollbar-none border-b border-[#e8e8e8]">
             {TABS.map(({ key, label }) => (
               <button
                 key={key}
                 onClick={() => setTabActiva(key)}
-                className={`relative py-3.5 pr-8 text-[11px] font-bold tracking-[2px] uppercase transition-colors duration-150 cursor-pointer ${
+                className={`relative py-3.5 pr-6 md:pr-8 text-[11px] font-bold tracking-[2px] uppercase transition-colors duration-150 cursor-pointer whitespace-nowrap flex-shrink-0 ${
                   tabActiva === key ? "text-[#1A1A1A]" : "text-[#aaa] hover:text-[#555]"
                 }`}
               >
@@ -130,13 +162,9 @@ export default function ProyectosPage() {
 
           {/* Grid de cards */}
           {proyectosFiltrados.length > 0 ? (
-            <div
-              className={`grid gap-[2px] ${getGridCols(proyectosFiltrados.length)} ${
-                proyectosFiltrados.length === 1 ? "max-w-sm" : ""
-              }`}
-            >
+            <div className="grid gap-x-6 gap-y-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {proyectosFiltrados.map((p, i) => (
-                <ScrollReveal key={p.slug} delay={i * 80}>
+                <ScrollReveal key={p.slug} delay={i * 80} className="w-full">
                   <ProyectoCard proyecto={p} />
                 </ScrollReveal>
               ))}
@@ -152,5 +180,13 @@ export default function ProyectosPage() {
       </main>
       <Footer />
     </>
+  );
+}
+
+export default function ProyectosPage() {
+  return (
+    <Suspense>
+      <ProyectosContent />
+    </Suspense>
   );
 }

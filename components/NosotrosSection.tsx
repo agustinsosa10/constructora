@@ -8,7 +8,7 @@ export default function NosotrosSection() {
 
   const METRICAS = [
     { valor: `+${aniosTrayectoria}`, label: "Años de trayectoria" },
-    { valor: `+${m2EnDesarrollo.toLocaleString("es-AR")}`, label: "M² en desarrollo" },
+    { valor: `+${m2EnDesarrollo.toLocaleString("es-AR")}`, label: "M² desarrollados" },
     { valor: String(proyectosEnDesarrollo), label: "Proyectos en desarrollo" },
     { valor: `+${proyectosEntregados}`, label: "Proyectos entregados" },
     { valor: String(obrasEnEjecucion), label: "Obras en ejecución" },
