@@ -130,7 +130,7 @@ function ProyectosContent() {
           </ScrollReveal>
 
           {/* Tabs — estado */}
-          <div className="flex overflow-x-auto scrollbar-none border-b border-[#e8e8e8]">
+          <div className="flex overflow-x-auto overflow-y-hidden scrollbar-none border-b border-[#e8e8e8]">
             {TABS.map(({ key, label }) => (
               <button
                 key={key}

@@ -28,7 +28,9 @@ export default function ProyectosCarousel() {
   const [animated, setAnimated] = useState(true);
   const [hovered, setHovered] = useState<number | null>(null);
   const transitioning = useRef(false);
+  const touchStartX = useRef<number | null>(null);
 
+  // Desktop: usa transitioning guard + infinite loop
   const prev = () => {
     if (transitioning.current) return;
     transitioning.current = true;
@@ -41,6 +43,23 @@ export default function ProyectosCarousel() {
     transitioning.current = true;
     setAnimated(true);
     setCurrent((c) => c + 1);
+  };
+
+  // Mobile: sin guard de transición (no hay CSS transition que dispare onTransitionEnd)
+  const mobilePrev = () => setCurrent((c) => ((c - 1) + total) % total);
+  const mobileNext = () => setCurrent((c) => (c + 1) % total);
+
+  const handleTouchStart = (e: TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const delta = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(delta) > 40) {
+      delta > 0 ? mobileNext() : mobilePrev();
+    }
+    touchStartX.current = null;
   };
 
   const goTo = (i: number) => {
@@ -160,7 +179,11 @@ export default function ProyectosCarousel() {
         </div>
 
         {/* Carousel — mobile */}
-        <div className="md:hidden">
+        <div
+          className="md:hidden"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           <Link
             href={`/proyectos/${proyectos[dotIndex].slug}`}
             target="_blank"
@@ -191,8 +214,40 @@ export default function ProyectosCarousel() {
           </Link>
         </div>
 
-        {/* Controls */}
-        <div className="flex items-center justify-between mt-8">
+        {/* Controls — mobile */}
+        <div className="flex md:hidden items-center justify-between mt-8">
+          <div className="flex gap-2">
+            {proyectos.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrent(i)}
+                className={`h-0.5 transition-all duration-300 ${
+                  i === dotIndex ? "w-8 bg-[#1A1A1A]" : "w-4 bg-[#1A1A1A]/30"
+                }`}
+                aria-label={`Ir al proyecto ${i + 1}`}
+              />
+            ))}
+          </div>
+          <div className="flex gap-3">
+            <button
+              onClick={mobilePrev}
+              className="w-10 h-10 border border-[#1A1A1A]/30 flex items-center justify-center hover:border-[#1A1A1A] transition-colors text-[#1A1A1A]"
+              aria-label="Anterior"
+            >
+              ←
+            </button>
+            <button
+              onClick={mobileNext}
+              className="w-10 h-10 border border-[#1A1A1A]/30 flex items-center justify-center hover:border-[#1A1A1A] transition-colors text-[#1A1A1A]"
+              aria-label="Siguiente"
+            >
+              →
+            </button>
+          </div>
+        </div>
+
+        {/* Controls — desktop */}
+        <div className="hidden md:flex items-center justify-between mt-8">
           <div className="flex gap-2">
             {proyectos.map((_, i) => (
               <button
@@ -205,7 +260,6 @@ export default function ProyectosCarousel() {
               />
             ))}
           </div>
-
           <div className="flex gap-3">
             <button
               onClick={prev}

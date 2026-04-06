@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
@@ -436,6 +436,8 @@ function Lightbox({
   onPrev: () => void;
   onNext: () => void;
 }) {
+  const touchStartX = useRef<number | null>(null);
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
@@ -451,14 +453,29 @@ function Lightbox({
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose, onPrev, onNext]);
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const delta = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(delta) > 40) {
+      delta > 0 ? onNext() : onPrev();
+    }
+    touchStartX.current = null;
+  };
+
   return (
     <div
       className="fixed inset-0 z-[200] bg-black/92 flex items-center justify-center"
       onClick={onClose}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       {/* Imagen */}
       <div
-        className="relative w-full max-w-5xl mx-6 aspect-[16/10]"
+        className="relative w-full mx-4 h-[70vh] md:mx-6 md:max-w-5xl md:h-auto md:aspect-[16/10]"
         onClick={(e) => e.stopPropagation()}
       >
         <Image
