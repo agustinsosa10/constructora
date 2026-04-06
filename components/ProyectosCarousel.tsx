@@ -49,11 +49,11 @@ export default function ProyectosCarousel() {
   const mobilePrev = () => setCurrent((c) => ((c - 1) + total) % total);
   const mobileNext = () => setCurrent((c) => (c + 1) % total);
 
-  const handleTouchStart = (e: TouchEvent) => {
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     touchStartX.current = e.touches[0].clientX;
   };
 
-  const handleTouchEnd = (e: TouchEvent) => {
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
     if (touchStartX.current === null) return;
     const delta = touchStartX.current - e.changedTouches[0].clientX;
     if (Math.abs(delta) > 40) {
