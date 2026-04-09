@@ -123,7 +123,7 @@ function SubnavSticky({
         {/* Logo */}
         <Link href="/" className="flex-shrink-0">
           <Image
-            src="/logos/logo-negativo.png"
+            src="/logos/logo-positivo.png"
             alt="IES Desarrollos Inmobiliarios"
             width={120}
             height={40}

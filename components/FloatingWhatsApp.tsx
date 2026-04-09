@@ -29,7 +29,7 @@ export default function FloatingWhatsApp() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Contactar por WhatsApp"
-      className="hidden md:flex fixed bottom-6 right-6 z-50 items-center justify-center w-14 h-14 rounded-full bg-[#1A1A1A] shadow-[0_4px_12px_rgba(0,0,0,0.15)] transition-transform duration-200 hover:scale-110"
+      className="flex fixed bottom-6 right-6 z-50 items-center justify-center w-14 h-14 rounded-full bg-[#1A1A1A] shadow-[0_4px_12px_rgba(0,0,0,0.15)] transition-transform duration-200 hover:scale-110"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
