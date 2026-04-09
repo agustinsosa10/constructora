@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
+import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -27,13 +28,11 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     locale: "es_AR",
     type: "website",
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: SITE_NAME }],
   },
   twitter: {
     card: "summary_large_image",
     title: `${SITE_NAME} | Salta Capital`,
     description: DESCRIPTION,
-    images: ["/og-image.jpg"],
   },
   alternates: {
     canonical: SITE_URL,
@@ -67,6 +66,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         {children}
+        <FloatingWhatsApp />
       </body>
     </html>
   );

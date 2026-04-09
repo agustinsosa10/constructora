@@ -17,6 +17,7 @@ export type Proyecto = {
   m2Totales: number;
   pisos: number;
   unidades: number;
+  destacado: boolean;
   amenities: { icono: string; label: string }[];
   galeria: string[];
   instalaciones: { foto: string; label: string }[];
@@ -30,8 +31,56 @@ export const proyectos: Proyecto[] = [
   {
     slug: "tower-one",
     nombre: "Tower One",
+    estado: "Entregado",
+    anioEntrega: 2026,
+    destacado: true,
+    tagline: "Altura y diseño en el corazón de Salta",
+    descripcion:
+      "Tower One es un desarrollo residencial de alta gama ubicado en el microcentro salteño. Ofrece departamentos de 1, 2 y 3 dormitorios con vistas panorámicas a la ciudad y el Cerro San Bernardo.",
+    imagenHero: "/proyectos/IES11_imgprinc.jpg",
+    superficie: "65–120 m²",
+    m2Totales: 6840,
+    pisos: 18,
+    unidades: 72,
+    amenities: [
+      { icono: "pool", label: "Piscina" },
+      { icono: "gym", label: "Gimnasio" },
+      { icono: "parking", label: "Cocheras" },
+      { icono: "terrace", label: "Terraza" },
+      { icono: "security", label: "Seguridad 24hs" },
+    ],
+    galeria: [
+      "/proyectos/IES11_imgprinc.jpg",
+      "/proyectos/IES14_imgprinc.jpg",
+      "/proyectos/images.jpeg",
+      "/proyectos/IES11_imgprinc.jpg",
+      "/proyectos/IES14_imgprinc.jpg",
+    ],
+    instalaciones: [
+      { foto: "/proyectos/IES11_imgprinc.jpg", label: "Lobby" },
+      { foto: "/proyectos/IES14_imgprinc.jpg", label: "Piscina" },
+    ],
+    planoMaestro: ["/proyectos/30-191112-plano-con-paisajismo-scaled.jpg"],
+    ubicacion: {
+      direccion: "Av. Entre Ríos 200, Salta Capital",
+      lat: -24.7859,
+      lng: -65.4117,
+    },
+    porcentajeAvance: 65,
+    fasesObra: [
+      { nombre: "Fundaciones", completada: true, activa: false },
+      { nombre: "Estructura", completada: true, activa: false },
+      { nombre: "Mampostería", completada: false, activa: true },
+      { nombre: "Instalaciones", completada: false, activa: false },
+      { nombre: "Terminaciones", completada: false, activa: false },
+    ],
+  },
+  {
+    slug: "tower-one",
+    nombre: "Tower One",
     estado: "En construccion",
     anioEntrega: 2026,
+    destacado: true,
     tagline: "Altura y diseño en el corazón de Salta",
     descripcion:
       "Tower One es un desarrollo residencial de alta gama ubicado en el microcentro salteño. Ofrece departamentos de 1, 2 y 3 dormitorios con vistas panorámicas a la ciudad y el Cerro San Bernardo.",
@@ -78,6 +127,7 @@ export const proyectos: Proyecto[] = [
     nombre: "Los Aromos",
     estado: "Entregado",
     anioEntrega: 2023,
+    destacado: true,
     tagline: "Vivir en armonía con la naturaleza",
     descripcion:
       "Urbanización cerrada con lotes de 400 a 800 m² rodeados de espacios verdes. Infraestructura completa: agua, gas, electricidad y acceso pavimentado.",
@@ -115,10 +165,10 @@ export const proyectos: Proyecto[] = [
   },
   {
     slug: "centro-comercial-norte",
-
     nombre: "Centro Comercial Norte",
     estado: "Proximo lanzamiento",
     anioEntrega: 2027,
+    destacado: true,
     tagline: "El nuevo polo comercial del norte salteño",
     descripcion:
       "Complejo comercial moderno con locales de distintos rubros, oficinas y estacionamiento para 200 vehículos. Zona de alto tráfico peatonal y vehicular.",
@@ -139,9 +189,7 @@ export const proyectos: Proyecto[] = [
       "/proyectos/IES11_imgprinc.jpg",
       "/proyectos/IES14_imgprinc.jpg",
     ],
-    instalaciones: [
-      { foto: "/proyectos/images.jpeg", label: "Fachada" },
-    ],
+    instalaciones: [{ foto: "/proyectos/images.jpeg", label: "Fachada" }],
     planoMaestro: ["/proyectos/30-191112-plano-con-paisajismo-scaled.jpg"],
     ubicacion: {
       direccion: "Av. Virrey Toledo 1500, Salta Capital",
@@ -162,12 +210,16 @@ export function calcularMetricas(lista: Proyecto[]) {
   const enConstruccion = lista.filter((p) => p.estado === "En construccion");
   const entregados = lista.filter((p) => p.estado === "Entregado");
 
-  const m2EnDesarrollo = enConstruccion.reduce((acc, p) => acc + p.m2Totales, 0);
+  const m2EnDesarrollo = enConstruccion.reduce(
+    (acc, p) => acc + p.m2Totales,
+    0,
+  );
+  const slugsUnicos = new Set(lista.map((p) => p.slug));
   return {
     aniosTrayectoria,
     m2EnDesarrollo,
     proyectosEnDesarrollo: enConstruccion.length,
     proyectosEntregados: entregados.length,
-    obrasEnEjecucion: enConstruccion.length,
+    totalProyectos: slugsUnicos.size,
   };
 }

@@ -43,7 +43,10 @@ export default function HeroSection() {
         <div
           key={src}
           className="absolute inset-0 transition-opacity duration-1000"
-          style={{ opacity: i === current ? 1 : 0, zIndex: i === current ? 2 : i === prev ? 1 : 0 }}
+          style={{
+            opacity: i === current ? 1 : 0,
+            zIndex: i === current ? 2 : i === prev ? 1 : 0,
+          }}
         >
           <Image
             src={src}
@@ -58,6 +61,9 @@ export default function HeroSection() {
       {/* Overlay sutil */}
       <div className="absolute inset-0 bg-black/25 z-10" />
 
+      {/* Gradiente superior — protege legibilidad del Navbar */}
+      <div className="absolute top-0 left-0 right-0 h-56 bg-gradient-to-b from-black/90 to-transparent z-10" />
+
       {/* Gradiente inferior */}
       <div className="absolute bottom-0 left-0 right-0 h-[65%] bg-gradient-to-t from-[#1A1A1A] via-[#1A1A1A]/70 to-transparent z-20" />
 
@@ -70,7 +76,11 @@ export default function HeroSection() {
         </ScrollReveal>
         <ScrollReveal delay={120}>
           <h1 className="text-white font-extrabold tracking-tight leading-none text-5xl md:text-7xl lg:text-8xl mb-5 max-w-3xl">
-            Construimos<br />el futuro<br />de Salta
+            Construimos
+            <br />
+            el futuro
+            <br />
+            de Salta
           </h1>
         </ScrollReveal>
         <ScrollReveal delay={240}>

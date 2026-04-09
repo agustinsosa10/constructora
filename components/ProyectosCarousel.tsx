@@ -8,20 +8,28 @@ import ScrollReveal from "@/components/ScrollReveal";
 
 const ESTADO_BADGE: Record<string, string> = {
   "En construccion": "En desarrollo",
-  "Entregado": "Entregado",
+  Entregado: "Entregado",
   "Proximo lanzamiento": "Próximo lanzamiento",
 };
 
-const CARDS_VISIBLE = 3;
-const total = proyectos.length;
-const track = [...proyectos, ...proyectos.slice(0, CARDS_VISIBLE)];
+const CARDS_VISIBLE_MAX = 3;
+const destacados = proyectos.filter((p) => p.destacado);
+const total = destacados.length;
+// Si hay menos proyectos que el máximo de cards visibles, no se necesita loop infinito
+const cardsVisible = Math.min(CARDS_VISIBLE_MAX, total);
+const canNavigate = total > CARDS_VISIBLE_MAX;
+const track = canNavigate
+  ? [...destacados, ...destacados.slice(0, cardsVisible)]
+  : [...destacados];
 
 const GAP = 8; // gap-2 = 8px
-// Ancho base de cada card: 1/3 del contenedor menos la proporción de gaps
-const BASE_W = `calc(${100 / CARDS_VISIBLE}% - ${GAP * (CARDS_VISIBLE - 1) / CARDS_VISIBLE}px)`;
-// Card hovereada: crece a 1.6 partes; las otras 2 visibles bajan a 0.7 — suma = 3.0 ✓
-const HOVER_W  = `calc(${100 / CARDS_VISIBLE * 1.6}% - ${GAP * (CARDS_VISIBLE - 1) / CARDS_VISIBLE}px)`;
-const SHRINK_W = `calc(${100 / CARDS_VISIBLE * 0.7}% - ${GAP * (CARDS_VISIBLE - 1) / CARDS_VISIBLE}px)`;
+// Con 3 cards: hover crece a 1.6x, las otras bajan a 0.7x (1.6 + 0.7 + 0.7 = 3.0 ✓)
+// Con 2 cards: expansión más sutil para que no sea tan brusco (1.2 + 0.8 = 2.0 ✓)
+const hoverGrow = cardsVisible === 2 ? 1.2 : 1.6;
+const hoverShrink = cardsVisible === 2 ? 0.8 : 0.7;
+const BASE_W = `calc(${100 / cardsVisible}% - ${(GAP * (cardsVisible - 1)) / cardsVisible}px)`;
+const HOVER_W = `calc(${(100 / cardsVisible) * hoverGrow}% - ${(GAP * (cardsVisible - 1)) / cardsVisible}px)`;
+const SHRINK_W = `calc(${(100 / cardsVisible) * hoverShrink}% - ${(GAP * (cardsVisible - 1)) / cardsVisible}px)`;
 
 export default function ProyectosCarousel() {
   const [current, setCurrent] = useState(0);
@@ -46,7 +54,7 @@ export default function ProyectosCarousel() {
   };
 
   // Mobile: sin guard de transición (no hay CSS transition que dispare onTransitionEnd)
-  const mobilePrev = () => setCurrent((c) => ((c - 1) + total) % total);
+  const mobilePrev = () => setCurrent((c) => (c - 1 + total) % total);
   const mobileNext = () => setCurrent((c) => (c + 1) % total);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
@@ -81,16 +89,15 @@ export default function ProyectosCarousel() {
 
   const dotIndex = ((current % total) + total) % total;
 
-  const cardWidthPct = 100 / CARDS_VISIBLE;
+  const cardWidthPct = 100 / cardsVisible;
   const translateX = -(current * cardWidthPct);
-  const translateGap = current * GAP * ((CARDS_VISIBLE - 1) / CARDS_VISIBLE);
+  const translateGap = current * GAP * ((cardsVisible - 1) / cardsVisible);
 
   // Determina el ancho de cada card según hover
   const getWidth = (i: number) => {
     if (hovered === null) return BASE_W;
     if (i === hovered) return HOVER_W;
-    // Solo afecta las cards visibles
-    const visible = i >= current && i < current + CARDS_VISIBLE;
+    const visible = i >= current && i < current + cardsVisible;
     if (visible) return SHRINK_W;
     return BASE_W;
   };
@@ -141,7 +148,7 @@ export default function ProyectosCarousel() {
                 className="group relative overflow-hidden h-[480px] flex-shrink-0"
                 style={{
                   width: getWidth(i),
-                  transition: "width 0.45s cubic-bezier(0.4, 0, 0.2, 1)",
+                  transition: "width 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
                 }}
                 onMouseEnter={() => setHovered(i)}
                 onMouseLeave={() => setHovered(null)}
@@ -168,9 +175,13 @@ export default function ProyectosCarousel() {
                     {proyecto.nombre}
                   </h3>
                   <p className="text-xs font-semibold">
-                    <span className="text-[#C41230]">{ESTADO_BADGE[proyecto.estado]}</span>
+                    <span className="text-[#C41230]">
+                      {ESTADO_BADGE[proyecto.estado]}
+                    </span>
                     <span className="text-white/50"> · </span>
-                    <span className="text-white/60">{proyecto.anioEntrega}</span>
+                    <span className="text-white/60">
+                      {proyecto.anioEntrega}
+                    </span>
                   </p>
                 </div>
               </Link>
@@ -185,30 +196,35 @@ export default function ProyectosCarousel() {
           onTouchEnd={handleTouchEnd}
         >
           <Link
-            href={`/proyectos/${proyectos[dotIndex].slug}`}
+            href={`/proyectos/${destacados[dotIndex].slug}`}
             target="_blank"
             rel="noopener noreferrer"
             className="group relative overflow-hidden h-[420px] block w-full"
           >
             <Image
-              src={proyectos[dotIndex].imagenHero}
-              alt={proyectos[dotIndex].nombre}
+              src={destacados[dotIndex].imagenHero}
+              alt={destacados[dotIndex].nombre}
               fill
               className="object-cover"
               sizes="100vw"
             />
             <div className="absolute top-5 right-5 z-10 text-white/60 text-xs font-bold tracking-widest">
-              {String(dotIndex + 1).padStart(2, "0")}/{String(total).padStart(2, "0")}
+              {String(dotIndex + 1).padStart(2, "0")}/
+              {String(total).padStart(2, "0")}
             </div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
             <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
               <h3 className="text-white font-extrabold text-xl tracking-tight mb-1">
-                {proyectos[dotIndex].nombre}
+                {destacados[dotIndex].nombre}
               </h3>
               <p className="text-xs font-semibold">
-                <span className="text-[#C41230]">{ESTADO_BADGE[proyectos[dotIndex].estado]}</span>
+                <span className="text-[#C41230]">
+                  {ESTADO_BADGE[destacados[dotIndex].estado]}
+                </span>
                 <span className="text-white/50"> · </span>
-                <span className="text-white/60">{proyectos[dotIndex].anioEntrega}</span>
+                <span className="text-white/60">
+                  {destacados[dotIndex].anioEntrega}
+                </span>
               </p>
             </div>
           </Link>
@@ -217,7 +233,7 @@ export default function ProyectosCarousel() {
         {/* Controls — mobile */}
         <div className="flex md:hidden items-center justify-between mt-8">
           <div className="flex gap-2">
-            {proyectos.map((_, i) => (
+            {destacados.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setCurrent(i)}
@@ -246,37 +262,39 @@ export default function ProyectosCarousel() {
           </div>
         </div>
 
-        {/* Controls — desktop */}
-        <div className="hidden md:flex items-center justify-between mt-8">
-          <div className="flex gap-2">
-            {proyectos.map((_, i) => (
+        {/* Controls — desktop (solo si hay más proyectos que cards visibles) */}
+        {canNavigate && (
+          <div className="hidden md:flex items-center justify-between mt-8">
+            <div className="flex gap-2">
+              {destacados.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => goTo(i)}
+                  className={`h-0.5 transition-all duration-300 ${
+                    i === dotIndex ? "w-8 bg-[#1A1A1A]" : "w-4 bg-[#1A1A1A]/30"
+                  }`}
+                  aria-label={`Ir al proyecto ${i + 1}`}
+                />
+              ))}
+            </div>
+            <div className="flex gap-3">
               <button
-                key={i}
-                onClick={() => goTo(i)}
-                className={`h-0.5 transition-all duration-300 ${
-                  i === dotIndex ? "w-8 bg-[#1A1A1A]" : "w-4 bg-[#1A1A1A]/30"
-                }`}
-                aria-label={`Ir al proyecto ${i + 1}`}
-              />
-            ))}
+                onClick={prev}
+                className="w-10 h-10 border border-[#1A1A1A]/30 flex items-center justify-center hover:border-[#1A1A1A] transition-colors text-[#1A1A1A]"
+                aria-label="Anterior"
+              >
+                ←
+              </button>
+              <button
+                onClick={next}
+                className="w-10 h-10 border border-[#1A1A1A]/30 flex items-center justify-center hover:border-[#1A1A1A] transition-colors text-[#1A1A1A]"
+                aria-label="Siguiente"
+              >
+                →
+              </button>
+            </div>
           </div>
-          <div className="flex gap-3">
-            <button
-              onClick={prev}
-              className="w-10 h-10 border border-[#1A1A1A]/30 flex items-center justify-center hover:border-[#1A1A1A] transition-colors text-[#1A1A1A]"
-              aria-label="Anterior"
-            >
-              ←
-            </button>
-            <button
-              onClick={next}
-              className="w-10 h-10 border border-[#1A1A1A]/30 flex items-center justify-center hover:border-[#1A1A1A] transition-colors text-[#1A1A1A]"
-              aria-label="Siguiente"
-            >
-              →
-            </button>
-          </div>
-        </div>
+        )}
 
         {/* Mobile CTA */}
         <div className="mt-8 md:hidden">
