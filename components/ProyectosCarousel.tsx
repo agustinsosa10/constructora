@@ -110,7 +110,7 @@ export default function ProyectosCarousel() {
           <div className="flex items-end justify-between mb-12">
             <div>
               <div className="w-10 h-0.5 bg-[#C41230] mb-3" />
-              <p className="text-[#C41230] text-xs font-bold tracking-[0.3em] uppercase mb-2">
+              <p className="text-[#C41230] text-sm font-bold tracking-[0.3em] uppercase mb-2">
                 Desarrollos
               </p>
               <h2 className="text-[#1A1A1A] font-extrabold text-4xl md:text-5xl tracking-tight leading-none">

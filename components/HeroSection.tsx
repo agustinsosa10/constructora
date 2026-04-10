@@ -51,6 +51,7 @@ export default function HeroSection() {
           <Image
             src={src}
             fill
+            sizes="100vw"
             className="object-cover"
             priority={i === 0}
             alt={`IES Desarrollos — slide ${i + 1}`}
@@ -70,12 +71,12 @@ export default function HeroSection() {
       {/* Contenido */}
       <div className="absolute bottom-0 left-0 right-0 z-30 max-w-[1440px] mx-auto px-6 md:px-12 pb-16 md:pb-24">
         <ScrollReveal delay={0}>
-          <p className="text-[#C41230] text-xs font-bold tracking-[0.3em] uppercase mb-3">
+          <p className="text-[#C41230] text-sm font-bold tracking-[0.3em] uppercase mb-3">
             Salta Capital
           </p>
         </ScrollReveal>
         <ScrollReveal delay={120}>
-          <h1 className="text-white font-extrabold tracking-tight leading-none text-5xl md:text-7xl lg:text-8xl mb-5 max-w-3xl">
+          <h1 className="text-white font-extrabold text-[40px] sm:text-[44px] md:text-[60px] tracking-[-1.5px] md:tracking-[-2px] leading-[0.95] mb-5 max-w-3xl">
             Construimos
             <br />
             el futuro
@@ -84,9 +85,9 @@ export default function HeroSection() {
           </h1>
         </ScrollReveal>
         <ScrollReveal delay={240}>
-          <p className="text-white/70 text-base md:text-lg max-w-md mb-8 leading-relaxed">
-            Desarrollos residenciales, urbanizaciones y espacios comerciales
-            pensados para Salta Capital.
+          <p className="text-white/70 text-[15px] max-w-md mb-8">
+            Residencial, urbanizaciones y espacios comerciales que definen
+            la Salta de hoy y de mañana.
           </p>
         </ScrollReveal>
         <ScrollReveal delay={360}>

@@ -22,7 +22,7 @@ export default function ContactoSection() {
       <div className="max-w-[1440px] mx-auto px-6 md:px-12">
         <ScrollReveal delay={0}>
           <div className="w-10 h-0.5 bg-[#C41230] mb-3" />
-          <p className="text-[#C41230] text-xs font-bold tracking-[0.3em] uppercase mb-2">
+          <p className="text-[#C41230] text-sm font-bold tracking-[0.3em] uppercase mb-2">
             Contacto
           </p>
           <h2 className="text-[#1A1A1A] font-extrabold text-4xl md:text-5xl tracking-tight mb-12">
@@ -54,7 +54,7 @@ export default function ContactoSection() {
                   <p className="text-xs font-bold tracking-widest text-[#C41230] uppercase mb-1">
                     Dirección
                   </p>
-                  <p className="text-[#1A1A1A] text-sm">
+                  <p className="text-[#1A1A1A] text-[15px]">
                     Salta Capital, Argentina
                   </p>
                 </div>
@@ -177,7 +177,7 @@ export default function ContactoSection() {
                   <p className="text-[#1A1A1A] font-bold text-xl">
                     ¡Mensaje enviado!
                   </p>
-                  <p className="text-[#595959] text-sm">
+                  <p className="text-[#595959] text-[15px]">
                     Te contactaremos a la brevedad.
                   </p>
                 </div>

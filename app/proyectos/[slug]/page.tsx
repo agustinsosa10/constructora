@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { proyectos } from "@/data/proyectos";
 import ProyectoPageClient from "@/components/ProyectoPageClient";
+import Footer from "@/components/Footer";
 
 export function generateStaticParams() {
   return proyectos.map((p) => ({ slug: p.slug }));
@@ -44,5 +45,10 @@ export default async function ProyectoSlugPage({
 
   if (!proyecto) notFound();
 
-  return <ProyectoPageClient proyecto={proyecto} />;
+  return (
+    <>
+      <ProyectoPageClient proyecto={proyecto} />
+      <Footer />
+    </>
+  );
 }

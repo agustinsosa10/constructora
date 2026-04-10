@@ -30,7 +30,7 @@ export default function Footer() {
                 height={36}
                 className="h-8 w-auto object-contain mb-4"
               />
-              <p className="text-white/50 text-sm leading-relaxed mb-6">
+              <p className="text-white/50 text-[15px] leading-relaxed mb-6">
                 Construimos el futuro de Salta
               </p>
               <div className="flex gap-2 flex-wrap justify-center md:justify-start">
@@ -162,7 +162,7 @@ export default function Footer() {
                 Contacto
               </p>
               <div className="space-y-3">
-                <p className="text-white/50 text-sm">
+                <p className="text-white/50 text-[15px]">
                   Salta Capital, Argentina
                 </p>
                 <a

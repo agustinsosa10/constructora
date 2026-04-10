@@ -42,63 +42,65 @@ export default function NosotrosSection() {
   ];
 
   return (
-    <section id="nosotros" className="bg-white py-24">
-      <div className="max-w-[1440px] mx-auto px-6 md:px-12">
-        {/* Fila 1 — Texto + Imagen, misma altura */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-stretch">
-          {/* Texto */}
-          <div className="flex flex-col justify-between">
-            <div>
-              <ScrollReveal delay={0}>
-                <div className="w-10 h-0.5 bg-[#C41230] mb-3" />
-                <p className="text-[#C41230] text-xs font-bold tracking-[0.3em] uppercase mb-2">
-                  Nosotros
-                </p>
-              </ScrollReveal>
-              <ScrollReveal delay={100}>
-                <h2 className="text-[#1A1A1A] font-extrabold text-4xl md:text-5xl tracking-tight leading-tight mb-6">
-                  Construimos
-                  <br />
-                  en Salta
-                  <br />
-                  desde hace más
-                  <br />
-                  de una década
-                </h2>
-              </ScrollReveal>
-              <ScrollReveal delay={200}>
-                <p className="text-[#595959] text-base leading-relaxed max-w-md">
-                  IES Desarrollos Inmobiliarios nació con el propósito de
-                  transformar la ciudad de Salta. Diseñamos y construimos
-                  espacios que combinan calidad arquitectónica, funcionalidad y
-                  valor a largo plazo.
-                </p>
-              </ScrollReveal>
-            </div>
-          </div>
-
-          {/* Imagen — h-full para igualar la altura del texto */}
-          <ScrollReveal delay={150} className="min-h-[350px]">
-            <div className="relative h-full min-h-[350px] overflow-hidden">
-              <Image
-                src="/ies.jpeg"
-                alt="IES Desarrollos Inmobiliarios"
-                fill
-                className="object-cover transition-transform duration-500 ease-in-out hover:scale-110"
-              />
-            </div>
-          </ScrollReveal>
-        </div>
-
-        {/* Fila 2 — Métricas siempre a ancho completo */}
-        <div className="mt-16">
-          <ScrollReveal delay={250}>
-            <div className="border-t border-[#1A1A1A]/10 pt-10 mb-8">
-              <div className="flex items-center gap-3 justify-center">
-                <p className="text-[#C41230] text-xs font-bold tracking-[0.3em] uppercase">
-                  Resultados que generan confianza
-                </p>
+    <section id="nosotros" className="bg-white">
+      {/* Fila 1 — Texto + Imagen */}
+      <div className="py-24">
+        <div className="max-w-[1440px] mx-auto px-6 md:px-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-stretch">
+            {/* Texto */}
+            <div className="flex flex-col justify-between">
+              <div>
+                <ScrollReveal delay={0}>
+                  <div className="w-10 h-0.5 bg-[#C41230] mb-3" />
+                  <p className="text-[#C41230] text-sm font-bold tracking-[0.3em] uppercase mb-2">
+                    Nosotros
+                  </p>
+                </ScrollReveal>
+                <ScrollReveal delay={100}>
+                  <h2 className="text-[#1A1A1A] font-extrabold text-4xl md:text-5xl tracking-tight leading-tight mb-6">
+                    Más de una
+                    <br />
+                    década
+                    <br />
+                    transformando
+                    <br />
+                    Salta
+                  </h2>
+                </ScrollReveal>
+                <ScrollReveal delay={200}>
+                  <p className="text-[15px] text-[#595959] leading-[1.75]">
+                    IES Desarrollos Inmobiliarios nació con el propósito de
+                    transformar la ciudad de Salta. Diseñamos y construimos
+                    espacios que combinan calidad arquitectónica, funcionalidad y
+                    valor a largo plazo.
+                  </p>
+                </ScrollReveal>
               </div>
+            </div>
+
+            {/* Imagen — h-full para igualar la altura del texto */}
+            <ScrollReveal delay={150} className="min-h-[350px]">
+              <div className="relative h-full min-h-[350px] overflow-hidden">
+                <Image
+                  src="/ies.jpeg"
+                  alt="IES Desarrollos Inmobiliarios"
+                  fill
+                  className="object-cover transition-transform duration-500 ease-in-out hover:scale-110"
+                />
+              </div>
+            </ScrollReveal>
+          </div>
+        </div>
+      </div>
+
+      {/* Banda de métricas — fondo blanco */}
+      <div className="bg-white py-16">
+        <div className="max-w-[1440px] mx-auto px-6 md:px-12">
+          <ScrollReveal delay={250}>
+            <div className="border-t border-[#1A1A1A]/10 pt-10 mb-10 text-center">
+              <p className="text-[#C41230] text-3xl font-semibold tracking-[0.2em] uppercase">
+                Resultados que generan confianza
+              </p>
             </div>
           </ScrollReveal>
 
@@ -108,10 +110,10 @@ export default function NosotrosSection() {
               <ScrollReveal key={m.label} delay={300 + i * 70}>
                 <div className={`${METRIC_BORDER_CLASSES[i]} flex flex-col items-center text-center`}>
                   <div className="w-6 h-0.5 bg-[#C41230] mb-3" />
-                  <p className="text-[#1A1A1A] font-extrabold text-3xl tracking-tight">
+                  <p className="text-[#1A1A1A] font-extrabold text-5xl md:text-6xl tracking-tight">
                     {m.valor}
                   </p>
-                  <p className="text-[#595959] text-sm mt-1">{m.label}</p>
+                  <p className="text-[#595959] text-[15px] mt-2">{m.label}</p>
                 </div>
               </ScrollReveal>
             ))}

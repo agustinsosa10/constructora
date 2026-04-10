@@ -248,11 +248,11 @@ function SectionHeader({
 }) {
   return (
     <div className="mb-12">
-      <span className="block text-[10px] font-bold tracking-[3px] uppercase text-[#C41230] mb-2.5">
+      <span className="block text-sm font-bold tracking-[0.3em] uppercase text-[#C41230] mb-2.5">
         {label}
       </span>
       <p
-        className={`text-[32px] font-extrabold tracking-[-0.8px] ${
+        className={`text-4xl font-extrabold tracking-tight ${
           dark ? "text-white" : "text-[#1A1A1A]"
         }`}
       >
@@ -272,10 +272,10 @@ function SecDescripcion({ proyecto }: { proyecto: Proyecto }) {
         {/* Texto */}
         <ScrollReveal delay={0}>
           <div>
-            <h2 className="text-[34px] font-extrabold text-[#1A1A1A] tracking-[-1px] leading-[1.1] mb-6">
+            <h2 className="text-4xl md:text-5xl font-extrabold text-[#1A1A1A] tracking-tight leading-[1.1] mb-6">
               {proyecto.nombre}
             </h2>
-            <p className="text-[14px] text-[#595959] leading-[1.75]">
+            <p className="text-[15px] text-[#595959] leading-[1.75]">
               {proyecto.descripcion}
             </p>
           </div>
@@ -292,7 +292,7 @@ function SecDescripcion({ proyecto }: { proyecto: Proyecto }) {
                 <p className="text-[9px] text-[#aaa] font-bold tracking-[2px] uppercase mb-1">
                   Ubicación
                 </p>
-                <p className="text-[14px] text-[#1A1A1A] font-semibold">
+                <p className="text-[15px] text-[#1A1A1A] font-semibold">
                   {proyecto.ubicacion.direccion}
                 </p>
               </div>
@@ -306,7 +306,7 @@ function SecDescripcion({ proyecto }: { proyecto: Proyecto }) {
                 <p className="text-[9px] text-[#aaa] font-bold tracking-[2px] uppercase mb-1">
                   Superficie
                 </p>
-                <p className="text-[14px] text-[#1A1A1A] font-semibold">
+                <p className="text-[15px] text-[#1A1A1A] font-semibold">
                   {proyecto.superficie}
                 </p>
               </div>
@@ -320,7 +320,7 @@ function SecDescripcion({ proyecto }: { proyecto: Proyecto }) {
                 <p className="text-[9px] text-[#aaa] font-bold tracking-[2px] uppercase mb-1">
                   Unidades
                 </p>
-                <p className="text-[14px] text-[#1A1A1A] font-semibold">
+                <p className="text-[15px] text-[#1A1A1A] font-semibold">
                   {proyecto.unidades} · {proyecto.pisos} pisos
                 </p>
               </div>
@@ -334,7 +334,7 @@ function SecDescripcion({ proyecto }: { proyecto: Proyecto }) {
                 <p className="text-[9px] text-[#aaa] font-bold tracking-[2px] uppercase mb-1">
                   Entrega estimada
                 </p>
-                <p className="text-[14px] text-[#1A1A1A] font-semibold">
+                <p className="text-[15px] text-[#1A1A1A] font-semibold">
                   {proyecto.anioEntrega}
                 </p>
               </div>
@@ -354,7 +354,7 @@ function SecAvance({ proyecto }: { proyecto: Proyecto }) {
     >
       <div className="max-w-7xl mx-auto">
         <ScrollReveal delay={0}>
-          <span className="block text-[10px] font-bold tracking-[3px] uppercase text-[#C41230] mb-8">
+          <span className="block text-sm font-bold tracking-[0.3em] uppercase text-[#C41230] mb-8">
             Avance de obra
           </span>
         </ScrollReveal>
@@ -781,18 +781,18 @@ function SecContacto({ proyecto }: { proyecto: Proyecto }) {
   return (
     <section
       id="contacto"
-      className="scroll-mt-[72px] bg-[#1A1A1A] px-6 md:px-16 py-18"
+      className="scroll-mt-[72px] bg-white px-6 md:px-16 py-18"
     >
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20">
         <ScrollReveal delay={0}>
           <div>
-            <span className="block text-[10px] font-bold tracking-[3px] uppercase text-[#C41230] mb-3">
+            <span className="block text-sm font-bold tracking-[0.3em] uppercase text-[#C41230] mb-3">
               Contacto
             </span>
-            <p className="text-[32px] font-extrabold text-white tracking-[-0.8px] mb-4">
+            <p className="text-4xl font-extrabold text-[#1A1A1A] tracking-tight mb-4">
               ¿Te interesa este proyecto?
             </p>
-            <p className="text-[13px] text-white/40">
+            <p className="text-[15px] text-[#595959]">
               Dejanos tus datos y un asesor te contacta a la brevedad.
             </p>
           </div>
@@ -804,23 +804,23 @@ function SecContacto({ proyecto }: { proyecto: Proyecto }) {
               <input
                 type="text"
                 placeholder="Nombre y apellido"
-                className="bg-white/[0.06] border border-white/10 px-4 py-3.5 text-[12px] text-white/60 placeholder:text-white/30 outline-none focus:border-white/25 transition-colors font-[Montserrat]"
+                className="bg-[#F5F4F2] border border-[#1A1A1A]/15 px-4 py-3.5 text-[12px] text-[#1A1A1A] placeholder:text-[#1A1A1A]/35 outline-none focus:border-[#1A1A1A]/40 transition-colors font-[Montserrat]"
               />
               <input
                 type="tel"
                 placeholder="Teléfono"
-                className="bg-white/[0.06] border border-white/10 px-4 py-3.5 text-[12px] text-white/60 placeholder:text-white/30 outline-none focus:border-white/25 transition-colors font-[Montserrat]"
+                className="bg-[#F5F4F2] border border-[#1A1A1A]/15 px-4 py-3.5 text-[12px] text-[#1A1A1A] placeholder:text-[#1A1A1A]/35 outline-none focus:border-[#1A1A1A]/40 transition-colors font-[Montserrat]"
               />
             </div>
             <input
               type="email"
               placeholder="Email"
-              className="bg-white/[0.06] border border-white/10 px-4 py-3.5 text-[12px] text-white/60 placeholder:text-white/30 outline-none focus:border-white/25 transition-colors font-[Montserrat]"
+              className="bg-[#F5F4F2] border border-[#1A1A1A]/15 px-4 py-3.5 text-[12px] text-[#1A1A1A] placeholder:text-[#1A1A1A]/35 outline-none focus:border-[#1A1A1A]/40 transition-colors font-[Montserrat]"
             />
             <textarea
               placeholder="¿Alguna consulta puntual?"
               rows={4}
-              className="bg-white/[0.06] border border-white/10 px-4 py-3.5 text-[12px] text-white/60 placeholder:text-white/30 outline-none focus:border-white/25 transition-colors resize-none font-[Montserrat]"
+              className="bg-[#F5F4F2] border border-[#1A1A1A]/15 px-4 py-3.5 text-[12px] text-[#1A1A1A] placeholder:text-[#1A1A1A]/35 outline-none focus:border-[#1A1A1A]/40 transition-colors resize-none font-[Montserrat]"
             />
             <div className="flex flex-wrap items-center gap-3 mt-1">
               <button
@@ -864,11 +864,11 @@ export default function ProyectoPageClient({
         <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/55 to-black/5" />
 
         {/* Contenido */}
-        <div className="absolute bottom-0 left-0 right-0 px-6 md:px-16 pb-12 z-10">
+        <div className="absolute bottom-0 left-0 right-0 z-10 max-w-[1440px] mx-auto px-6 md:px-12 pb-16 md:pb-24">
           {/* Estado */}
           <ScrollReveal delay={0}>
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-[9px] font-bold tracking-[1.5px] uppercase px-2.5 py-1 text-white bg-[#C41230]">
+              <span className="text-[9px] md:text-[10px] font-bold tracking-[1.5px] uppercase px-3 py-1.5 text-white bg-[#C41230]">
                 {estadoLabel(proyecto.estado)}
               </span>
             </div>
