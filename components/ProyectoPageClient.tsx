@@ -822,13 +822,38 @@ function SecContacto({ proyecto }: { proyecto: Proyecto }) {
               rows={4}
               className="bg-[#F5F4F2] border border-[#1A1A1A]/15 px-4 py-3.5 text-[12px] text-[#1A1A1A] placeholder:text-[#1A1A1A]/35 outline-none focus:border-[#1A1A1A]/40 transition-colors resize-none font-[Montserrat]"
             />
-            <div className="flex flex-wrap items-center gap-3 mt-1">
+            <div className="flex flex-col gap-3 mt-1">
               <button
                 type="submit"
-                className="bg-[#C41230] text-white text-[11px] font-bold tracking-[1.5px] uppercase px-8 py-3.5 hover:bg-red-800 transition-colors cursor-pointer"
+                className="w-full bg-[#C41230] text-white text-[11px] font-bold tracking-[1.5px] uppercase px-8 py-3.5 hover:bg-red-800 transition-colors cursor-pointer"
               >
                 Enviar consulta →
               </button>
+              <div className="md:hidden flex flex-col gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex-1 h-px bg-[#1A1A1A]/15" />
+                  <span className="text-[11px] text-[#595959] font-medium">o</span>
+                  <div className="flex-1 h-px bg-[#1A1A1A]/15" />
+                </div>
+                <a
+                  href={`https://wa.me/5493874509304?text=${encodeURIComponent(`Hola, me comunico desde el sitio web de IES Desarrollos. Me gustaría recibir más información sobre ${proyecto.nombre}.`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 w-full border border-[#1A1A1A] text-[#1A1A1A] text-[11px] font-bold tracking-[1.5px] uppercase px-8 py-3.5 hover:bg-[#1A1A1A] hover:text-white transition-colors"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 32 32"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M16 0C7.164 0 0 7.163 0 16c0 2.822.736 5.469 2.018 7.77L0 32l8.454-2.217A15.93 15.93 0 0 0 16 32c8.836 0 16-7.163 16-16S24.836 0 16 0zm0 29.333a13.27 13.27 0 0 1-6.77-1.852l-.485-.288-5.017 1.315 1.34-4.887-.317-.502A13.226 13.226 0 0 1 2.667 16C2.667 8.636 8.636 2.667 16 2.667S29.333 8.636 29.333 16 23.364 29.333 16 29.333zm7.27-9.878c-.398-.199-2.355-1.162-2.72-1.295-.365-.133-.631-.199-.897.199-.266.398-1.03 1.295-1.263 1.561-.232.266-.465.299-.863.1-.398-.2-1.681-.619-3.202-1.977-1.183-1.056-1.982-2.36-2.214-2.758-.232-.398-.025-.613.175-.811.18-.178.398-.465.597-.698.2-.232.266-.398.399-.664.133-.266.066-.498-.033-.697-.1-.2-.897-2.162-1.23-2.96-.324-.777-.652-.672-.897-.684l-.764-.013c-.266 0-.697.1-1.063.498-.365.398-1.395 1.362-1.395 3.322 0 1.96 1.428 3.854 1.627 4.12.2.266 2.81 4.29 6.81 6.017.952.411 1.695.657 2.274.841.956.304 1.826.261 2.514.158.767-.114 2.355-.962 2.688-1.891.333-.93.333-1.726.232-1.892-.1-.165-.365-.265-.763-.464z" />
+                  </svg>
+                  Hablar por WhatsApp
+                </a>
+              </div>
             </div>
           </div>
         </ScrollReveal>
