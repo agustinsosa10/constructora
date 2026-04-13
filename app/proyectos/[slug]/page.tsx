@@ -1,39 +1,9 @@
-import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { proyectos } from "@/data/proyectos";
+import { sanityFetch } from "@/lib/sanity/fetch";
+import { proyectoBySlugQuery } from "@/sanity/lib/queries";
+import type { SanityProyecto } from "@/lib/sanity/types";
 import ProyectoPageClient from "@/components/ProyectoPageClient";
 import Footer from "@/components/Footer";
-
-export function generateStaticParams() {
-  return proyectos.map((p) => ({ slug: p.slug }));
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
-  const { slug } = await params;
-  const proyecto = proyectos.find((p) => p.slug === slug);
-  if (!proyecto) return {};
-
-  return {
-    title: proyecto.nombre,
-    description: proyecto.tagline,
-    openGraph: {
-      title: proyecto.nombre,
-      description: proyecto.tagline,
-      images: [
-        {
-          url: proyecto.imagenHero,
-          width: 1200,
-          height: 630,
-          alt: proyecto.nombre,
-        },
-      ],
-    },
-  };
-}
 
 export default async function ProyectoSlugPage({
   params,
@@ -41,13 +11,24 @@ export default async function ProyectoSlugPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const proyecto = proyectos.find((p) => p.slug === slug);
+  const proyecto = await sanityFetch<SanityProyecto | null>(
+    proyectoBySlugQuery,
+    { slug },
+  )
 
-  if (!proyecto) notFound();
+  if (!proyecto || Array.isArray(proyecto)) notFound();
+
+  // Adaptamos galeria y planoMaestro de SanityImageAsset[] → string[]
+  // para mantener compatibilidad con ProyectoPageClient
+  const proyectoAdaptado = {
+    ...proyecto,
+    galeria: proyecto.galeria?.map((img) => img.url) ?? [],
+    planoMaestro: proyecto.planoMaestro?.map((img) => img.url) ?? [],
+  }
 
   return (
     <>
-      <ProyectoPageClient proyecto={proyecto} />
+      <ProyectoPageClient proyecto={proyectoAdaptado} />
       <Footer />
     </>
   );

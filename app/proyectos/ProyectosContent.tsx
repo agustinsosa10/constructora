@@ -7,7 +7,8 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
-import { proyectos, Proyecto } from "@/data/proyectos";
+import type { SanityProyecto } from "@/lib/sanity/types";
+type Proyecto = SanityProyecto;
 
 type EstadoTab =
   | "Todos"
@@ -97,7 +98,7 @@ const VALID_ESTADOS: EstadoTab[] = [
   "Entregado",
 ];
 
-function ProyectosInner() {
+function ProyectosInner({ proyectos }: { proyectos: Proyecto[] }) {
   const searchParams = useSearchParams();
   const estadoParam = searchParams.get("estado") as EstadoTab | null;
   const initialTab =
@@ -197,7 +198,7 @@ function ProyectosInner() {
   );
 }
 
-export default function ProyectosContent() {
+export default function ProyectosContent({ proyectos }: { proyectos: Proyecto[] }) {
   return (
     <Suspense
       fallback={
@@ -206,7 +207,7 @@ export default function ProyectosContent() {
         </div>
       }
     >
-      <ProyectosInner />
+      <ProyectosInner proyectos={proyectos} />
     </Suspense>
   );
 }

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { proyectos } from "@/data/proyectos";
+import { sanityFetch } from "@/lib/sanity/fetch";
+import { proyectoBySlugQuery, allSlugsQuery } from "@/sanity/lib/queries";
+import type { SanityProyecto } from "@/lib/sanity/types";
 
 const SITE_URL = "https://iesdesarrollos.com.ar";
 
@@ -10,21 +12,23 @@ type Props = {
 };
 
 export async function generateStaticParams() {
-  return proyectos.map((p) => ({ slug: p.slug }));
+  const slugs = await sanityFetch<{ slug: string }[]>(allSlugsQuery)
+  return slugs.map((p) => ({ slug: p.slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const proyecto = proyectos.find((p) => p.slug === slug);
+  const proyecto = await sanityFetch<SanityProyecto | null>(
+    proyectoBySlugQuery,
+    { slug },
+  )
 
-  if (!proyecto) notFound();
+  if (!proyecto || Array.isArray(proyecto)) notFound();
 
   const title = proyecto.nombre;
   const description = proyecto.descripcion;
   const url = `${SITE_URL}/proyectos/${proyecto.slug}`;
-  const image = proyecto.imagenHero.startsWith("/")
-    ? `${SITE_URL}${proyecto.imagenHero}`
-    : proyecto.imagenHero;
+  const image = proyecto.imagenHero;
 
   return {
     title,

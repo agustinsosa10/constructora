@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { proyectos } from "@/data/proyectos";
 import ScrollReveal from "@/components/ScrollReveal";
+import type { SanityProyecto } from "@/lib/sanity/types";
 
 const ESTADO_BADGE: Record<string, string> = {
   "En construccion": "En desarrollo",
@@ -13,30 +13,30 @@ const ESTADO_BADGE: Record<string, string> = {
 };
 
 const CARDS_VISIBLE_MAX = 3;
-const destacados = proyectos.filter((p) => p.destacado);
-const total = destacados.length;
-// Si hay menos proyectos que el máximo de cards visibles, no se necesita loop infinito
-const cardsVisible = Math.min(CARDS_VISIBLE_MAX, total);
-const canNavigate = total > CARDS_VISIBLE_MAX;
-const track = canNavigate
-  ? [...destacados, ...destacados.slice(0, cardsVisible)]
-  : [...destacados];
-
 const GAP = 8; // gap-2 = 8px
-// Con 3 cards: hover crece a 1.6x, las otras bajan a 0.7x (1.6 + 0.7 + 0.7 = 3.0 ✓)
-// Con 2 cards: expansión más sutil para que no sea tan brusco (1.2 + 0.8 = 2.0 ✓)
-const hoverGrow = cardsVisible === 2 ? 1.2 : 1.6;
-const hoverShrink = cardsVisible === 2 ? 0.8 : 0.7;
-const BASE_W = `calc(${100 / cardsVisible}% - ${(GAP * (cardsVisible - 1)) / cardsVisible}px)`;
-const HOVER_W = `calc(${(100 / cardsVisible) * hoverGrow}% - ${(GAP * (cardsVisible - 1)) / cardsVisible}px)`;
-const SHRINK_W = `calc(${(100 / cardsVisible) * hoverShrink}% - ${(GAP * (cardsVisible - 1)) / cardsVisible}px)`;
 
-export default function ProyectosCarousel() {
+export default function ProyectosCarousel({ proyectos }: { proyectos: SanityProyecto[] }) {
   const [current, setCurrent] = useState(0);
   const [animated, setAnimated] = useState(true);
   const [hovered, setHovered] = useState<number | null>(null);
   const transitioning = useRef(false);
   const touchStartX = useRef<number | null>(null);
+
+  const { destacados, total, cardsVisible, canNavigate, track, BASE_W, HOVER_W, SHRINK_W } = useMemo(() => {
+    const dest = proyectos.filter((p) => p.destacado);
+    const tot = dest.length;
+    const cv = Math.min(CARDS_VISIBLE_MAX, tot);
+    const can = tot > CARDS_VISIBLE_MAX;
+    const tr = can ? [...dest, ...dest.slice(0, cv)] : [...dest];
+
+    const hoverGrow = cv === 2 ? 1.2 : 1.6;
+    const hoverShrink = cv === 2 ? 0.8 : 0.7;
+    const bw = `calc(${100 / cv}% - ${(GAP * (cv - 1)) / cv}px)`;
+    const hw = `calc(${(100 / cv) * hoverGrow}% - ${(GAP * (cv - 1)) / cv}px)`;
+    const sw = `calc(${(100 / cv) * hoverShrink}% - ${(GAP * (cv - 1)) / cv}px)`;
+
+    return { destacados: dest, total: tot, cardsVisible: cv, canNavigate: can, track: tr, BASE_W: bw, HOVER_W: hw, SHRINK_W: sw };
+  }, [proyectos]);
 
   // Desktop: usa transitioning guard + infinite loop
   const prev = () => {
@@ -53,7 +53,7 @@ export default function ProyectosCarousel() {
     setCurrent((c) => c + 1);
   };
 
-  // Mobile: sin guard de transición (no hay CSS transition que dispare onTransitionEnd)
+  // Mobile: sin guard de transición
   const mobilePrev = () => setCurrent((c) => (c - 1 + total) % total);
   const mobileNext = () => setCurrent((c) => (c + 1) % total);
 
@@ -93,7 +93,6 @@ export default function ProyectosCarousel() {
   const translateX = -(current * cardWidthPct);
   const translateGap = current * GAP * ((cardsVisible - 1) / cardsVisible);
 
-  // Determina el ancho de cada card según hover
   const getWidth = (i: number) => {
     if (hovered === null) return BASE_W;
     if (i === hovered) return HOVER_W;
@@ -101,6 +100,8 @@ export default function ProyectosCarousel() {
     if (visible) return SHRINK_W;
     return BASE_W;
   };
+
+  if (total === 0) return null;
 
   return (
     <section id="proyectos" className="bg-[#F5F4F2] py-24">

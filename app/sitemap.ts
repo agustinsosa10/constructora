@@ -1,9 +1,12 @@
 import type { MetadataRoute } from "next";
-import { proyectos } from "@/data/proyectos";
+import { sanityFetch } from "@/lib/sanity/fetch";
+import { allSlugsQuery } from "@/sanity/lib/queries";
 
 const SITE_URL = "https://iesdesarrollos.com.ar";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const slugs = await sanityFetch<{ slug: string }[]>(allSlugsQuery)
+
   const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: SITE_URL,
@@ -19,7 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  const proyectoRoutes: MetadataRoute.Sitemap = proyectos.map((p) => ({
+  const proyectoRoutes: MetadataRoute.Sitemap = slugs.map((p) => ({
     url: `${SITE_URL}/proyectos/${p.slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,

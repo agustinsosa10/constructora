@@ -18,7 +18,13 @@ import {
   Star,
 } from "@phosphor-icons/react";
 import ScrollReveal from "@/components/ScrollReveal";
-import { Proyecto } from "@/data/proyectos";
+import type { SanityProyecto } from "@/lib/sanity/types";
+
+// Tipo de vista compatible con el componente: galeria y planoMaestro como strings[]
+type Proyecto = Omit<SanityProyecto, 'galeria' | 'planoMaestro'> & {
+  galeria: string[]
+  planoMaestro: string[]
+}
 
 // ── Icon map ────────────────────────────────────────────────────────────────
 const AMENITY_ICONS: Record<string, React.ElementType> = {
