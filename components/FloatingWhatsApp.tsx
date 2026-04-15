@@ -1,21 +1,15 @@
-"use client";
-
-import { useParams, usePathname } from "next/navigation";
-
 const PHONE = "5493874509304";
 const GENERIC_MSG =
   "Hola, me comunico desde el sitio web de IES Desarrollos. Me gustaría recibir más información sobre sus proyectos.";
 
-export default function FloatingWhatsApp() {
-  const pathname = usePathname();
-  const params = useParams();
-
-  let mensaje = GENERIC_MSG;
-
-  if (pathname.startsWith("/proyectos/") && params.slug) {
-    const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
-    mensaje = `Hola, me comunico desde el sitio web de IES Desarrollos. Me gustaría recibir más información sobre el proyecto "${slug}".`;
-  }
+export default function FloatingWhatsApp({
+  nombreProyecto,
+}: {
+  nombreProyecto?: string;
+}) {
+  const mensaje = nombreProyecto
+    ? `Hola, me comunico desde el sitio web de IES Desarrollos. Me gustaría recibir más información sobre el proyecto "${nombreProyecto}".`
+    : GENERIC_MSG;
 
   const href = `https://wa.me/${PHONE}?text=${encodeURIComponent(mensaje)}`;
 

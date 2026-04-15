@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
-import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -66,7 +65,6 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         {children}
-        <FloatingWhatsApp />
       </body>
     </html>
   );

@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import emailjs from "@emailjs/browser";
 import ScrollReveal from "@/components/ScrollReveal";
+
+const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!;
+const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!;
+const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!;
 
 export default function ContactoSection() {
   const [form, setForm] = useState({ nombre: "", email: "", mensaje: "" });
@@ -12,9 +17,23 @@ export default function ContactoSection() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("sending");
-    // Placeholder — Resend integration in a future task
-    await new Promise((r) => setTimeout(r, 800));
-    setStatus("sent");
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          from_name: form.nombre,
+          from_email: form.email,
+          message: form.mensaje,
+        },
+        EMAILJS_PUBLIC_KEY,
+      );
+      setStatus("sent");
+      setForm({ nombre: "", email: "", mensaje: "" });
+    } catch (err) {
+      console.error("EmailJS error:", err);
+      setStatus("error");
+    }
   };
 
   return (
@@ -235,6 +254,12 @@ export default function ContactoSection() {
                   >
                     {status === "sending" ? "Enviando..." : "Enviar mensaje"}
                   </button>
+                  {status === "error" && (
+                    <p className="text-sm text-red-600">
+                      Hubo un error al enviar. Intentá de nuevo o escribinos por
+                      WhatsApp.
+                    </p>
+                  )}
                   <div className="md:hidden">
                     <div className="flex items-center gap-3 mb-3">
                       <div className="flex-1 h-px bg-[#e0e0e0]" />

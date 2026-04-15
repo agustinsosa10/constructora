@@ -18,6 +18,7 @@ import {
   Star,
 } from "@phosphor-icons/react";
 import ScrollReveal from "@/components/ScrollReveal";
+import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import type { SanityProyecto } from "@/lib/sanity/types";
 
 // Tipo de vista compatible con el componente: galeria y planoMaestro como strings[]
@@ -1010,6 +1011,7 @@ export default function ProyectoPageClient({
         <SecUbicacion proyecto={proyecto} />
         <SecContacto proyecto={proyecto} />
       </main>
+      <FloatingWhatsApp nombreProyecto={proyecto.nombre} />
     </>
   );
 }
