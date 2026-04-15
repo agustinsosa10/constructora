@@ -9,10 +9,14 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
   font-family: var(--font-montserrat), sans-serif;
   color: #1A1A1A;
   background: #ffffff;
+  overflow-x: hidden;
+  max-width: 100%;
 }

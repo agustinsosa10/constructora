@@ -107,15 +107,15 @@ export default function NosotrosSection({ metricas }: { metricas: Metricas }) {
           </ScrollReveal>
 
           {/* Grid: 2 cols en mobile, 3 cols en md+ */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-0">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-0 overflow-hidden">
             {METRICAS.map((m, i) => (
               <ScrollReveal key={m.label} delay={300 + i * 70}>
-                <div className={`${METRIC_BORDER_CLASSES[i]} flex flex-col items-center text-center`}>
+                <div className={`${METRIC_BORDER_CLASSES[i]} flex flex-col items-center text-center overflow-hidden`}>
                   <div className="w-6 h-0.5 bg-[#C41230] mb-3" />
-                  <p className="text-[#1A1A1A] font-extrabold text-5xl md:text-6xl tracking-tight">
+                  <p className="text-[#1A1A1A] font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight">
                     {m.valor}
                   </p>
-                  <p className="text-[#595959] text-[15px] mt-2">{m.label}</p>
+                  <p className="text-[#595959] text-[13px] sm:text-[15px] mt-2">{m.label}</p>
                 </div>
               </ScrollReveal>
             ))}
