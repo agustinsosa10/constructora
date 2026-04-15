@@ -23,24 +23,17 @@ const PROYECTO_FIELDS = `
     _key,
     "url": asset->url,
   },
-  "instalaciones": instalaciones[] {
-    label,
-    "foto": foto.asset->url,
-  },
   "planoMaestro": planoMaestro[] {
     _key,
     "url": asset->url,
   },
   ubicacion {
     direccion,
-    lat,
-    lng,
+    mapUrl,
   },
-  porcentajeAvance,
   fasesObra[] {
     nombre,
-    completada,
-    activa,
+    porcentaje,
   },
 `
 

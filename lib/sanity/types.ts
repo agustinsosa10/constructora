@@ -1,7 +1,6 @@
 export type FaseObra = {
   nombre: string
-  completada: boolean
-  activa: boolean
+  porcentaje: number
 }
 
 // Imagen resuelta como URL directa desde el CDN de Sanity
@@ -26,9 +25,7 @@ export type SanityProyecto = {
   destacado: boolean
   amenities: { icono: string; label: string }[]
   galeria: SanityImageAsset[] // Array de { _key, url }
-  instalaciones: { foto: string; label: string }[]
   planoMaestro: SanityImageAsset[] // Array de { _key, url }
-  ubicacion: { direccion: string; lat: number; lng: number }
-  porcentajeAvance: number
+  ubicacion: { direccion: string; mapUrl?: string }
   fasesObra: FaseObra[]
 }

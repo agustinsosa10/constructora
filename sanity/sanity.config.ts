@@ -6,8 +6,9 @@ import { schemaTypes } from './schemaTypes'
 export default defineConfig({
   name: 'ies-desarrollos',
   title: 'IES Desarrollos — CMS',
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
+  basePath: '/studio',
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? 'ayi70jfj',
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET ?? 'production',
   plugins: [
     structureTool(),
     visionTool(),

@@ -24,9 +24,14 @@ export async function sanityFetch<T>(
     return [] as unknown as T
   }
 
+  // En desarrollo: sin caché para facilitar el testing
+  // En producción: caché indefinido, se invalida via webhook en /api/revalidate
+  if (process.env.NODE_ENV === 'development') {
+    return client.fetch<T>(query, params, { cache: 'no-store' })
+  }
+
   return client.fetch<T>(query, params, {
     next: {
-      // Sin revalidación automática — se actualiza via webhook en /api/revalidate
       revalidate: false,
     },
   })

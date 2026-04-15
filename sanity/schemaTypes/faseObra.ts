@@ -12,16 +12,11 @@ export const faseObra = defineType({
       validation: (R) => R.required(),
     }),
     defineField({
-      name: 'completada',
-      title: '¿Completada?',
-      type: 'boolean',
-      initialValue: false,
-    }),
-    defineField({
-      name: 'activa',
-      title: '¿Activa actualmente?',
-      type: 'boolean',
-      initialValue: false,
+      name: 'porcentaje',
+      title: 'Porcentaje completado (%)',
+      type: 'number',
+      validation: (R) => R.required().min(0).max(100),
+      initialValue: 0,
     }),
   ],
 })

@@ -109,12 +109,6 @@ export const proyecto = defineType({
       of: [{ type: 'image', options: { hotspot: true } }],
     }),
     defineField({
-      name: 'instalaciones',
-      title: 'Instalaciones y espacios comunes',
-      type: 'array',
-      of: [{ type: 'instalacion' }],
-    }),
-    defineField({
       name: 'planoMaestro',
       title: 'Planos maestro',
       type: 'array',
@@ -132,25 +126,13 @@ export const proyecto = defineType({
           validation: (R) => R.required(),
         }),
         defineField({
-          name: 'lat',
-          title: 'Latitud',
-          type: 'number',
-          validation: (R) => R.required(),
-        }),
-        defineField({
-          name: 'lng',
-          title: 'Longitud',
-          type: 'number',
+          name: 'mapUrl',
+          title: 'URL del mapa (embed de Google Maps)',
+          description: 'En Google Maps: Compartir → Insertar mapa → copiá el valor del atributo src del iframe',
+          type: 'url',
           validation: (R) => R.required(),
         }),
       ],
-    }),
-    defineField({
-      name: 'porcentajeAvance',
-      title: 'Porcentaje de avance (%)',
-      type: 'number',
-      validation: (R) => R.min(0).max(100),
-      initialValue: 0,
     }),
     defineField({
       name: 'fasesObra',
