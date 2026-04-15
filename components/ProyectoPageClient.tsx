@@ -352,7 +352,7 @@ function SecDescripcion({ proyecto }: { proyecto: Proyecto }) {
               </div>
               <div>
                 <p className="text-[9px] text-[#aaa] font-bold tracking-[2px] uppercase mb-1">
-                  {proyecto.estado === "Entregado" ? "Entregado en" : "Entrega estimada"}
+                  {proyecto.estado === "Entregado" ? "Entregado en" : "Entrega estimada "}
                 </p>
                 <p className="text-[15px] text-[#1A1A1A] font-semibold">
                   {proyecto.anioEntrega}
