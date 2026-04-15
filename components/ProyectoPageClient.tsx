@@ -333,19 +333,25 @@ function SecDescripcion({ proyecto }: { proyecto: Proyecto }) {
               </div>
             </div>
 
-            <div className="flex gap-4 items-start pb-5 border-b border-[#f0f0f0]">
-              <div className="w-9 h-9 bg-[#F5F4F2] flex items-center justify-center text-base flex-shrink-0" aria-hidden="true">
-                🏢
+            {(proyecto.unidades != null || proyecto.pisos != null) && (
+              <div className="flex gap-4 items-start pb-5 border-b border-[#f0f0f0]">
+                <div className="w-9 h-9 bg-[#F5F4F2] flex items-center justify-center text-base flex-shrink-0" aria-hidden="true">
+                  🏢
+                </div>
+                <div>
+                  <p className="text-[9px] text-[#aaa] font-bold tracking-[2px] uppercase mb-1">
+                    Unidades
+                  </p>
+                  <p className="text-[15px] text-[#1A1A1A] font-semibold">
+                    {proyecto.unidades != null && proyecto.pisos != null
+                      ? `${proyecto.unidades} · ${proyecto.pisos} pisos`
+                      : proyecto.unidades != null
+                        ? `${proyecto.unidades} unidades`
+                        : `${proyecto.pisos} pisos`}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-[9px] text-[#aaa] font-bold tracking-[2px] uppercase mb-1">
-                  Unidades
-                </p>
-                <p className="text-[15px] text-[#1A1A1A] font-semibold">
-                  {proyecto.unidades} · {proyecto.pisos} pisos
-                </p>
-              </div>
-            </div>
+            )}
 
             <div className="flex gap-4 items-start">
               <div className="w-9 h-9 bg-[#F5F4F2] flex items-center justify-center text-base flex-shrink-0" aria-hidden="true">
@@ -957,15 +963,19 @@ export default function ProyectoPageClient({
                     {proyecto.anioEntrega}
                   </span>
                 </div>
-                <div className="h-6 w-[1px] bg-white/15 hidden sm:block" />
-                <div className="flex flex-col gap-1">
-                  <span className="text-white/60 text-[9px] font-bold tracking-[2px] uppercase">
-                    Unidades
-                  </span>
-                  <span className="text-white text-[14px] font-bold">
-                    {proyecto.unidades}
-                  </span>
-                </div>
+                {proyecto.unidades != null && (
+                  <>
+                    <div className="h-6 w-[1px] bg-white/15 hidden sm:block" />
+                    <div className="flex flex-col gap-1">
+                      <span className="text-white/60 text-[9px] font-bold tracking-[2px] uppercase">
+                        Unidades
+                      </span>
+                      <span className="text-white text-[14px] font-bold">
+                        {proyecto.unidades}
+                      </span>
+                    </div>
+                  </>
+                )}
                 <div className="h-6 w-[1px] bg-white/15 hidden sm:block" />
                 <div className="flex flex-col gap-1">
                   <span className="text-white/60 text-[9px] font-bold tracking-[2px] uppercase">

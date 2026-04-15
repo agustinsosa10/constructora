@@ -9,7 +9,7 @@ const PROYECTO_FIELDS = `
   tagline,
   descripcion,
   "imagenHero": imagenHero.asset->url,
-  brochureUrl,
+  "brochureUrl": brochureUrl.asset->url,
   superficie,
   m2Totales,
   pisos,

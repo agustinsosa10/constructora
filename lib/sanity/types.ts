@@ -20,8 +20,8 @@ export type SanityProyecto = {
   brochureUrl?: string
   superficie: string
   m2Totales: number
-  pisos: number
-  unidades: number
+  pisos?: number
+  unidades?: number
   destacado: boolean
   amenities: { icono: string; label: string }[]
   galeria: SanityImageAsset[] // Array de { _key, url }
