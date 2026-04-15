@@ -1,7 +1,6 @@
 "use client";
 
 import { useParams, usePathname } from "next/navigation";
-import { proyectos } from "@/data/proyectos";
 
 const PHONE = "5493874509304";
 const GENERIC_MSG =
@@ -15,10 +14,7 @@ export default function FloatingWhatsApp() {
 
   if (pathname.startsWith("/proyectos/") && params.slug) {
     const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
-    const proyecto = proyectos.find((p) => p.slug === slug);
-    if (proyecto) {
-      mensaje = `Hola, me comunico desde el sitio web de IES Desarrollos. Me gustaría recibir más información sobre ${proyecto.nombre}.`;
-    }
+    mensaje = `Hola, me comunico desde el sitio web de IES Desarrollos. Me gustaría recibir más información sobre el proyecto "${slug}".`;
   }
 
   const href = `https://wa.me/${PHONE}?text=${encodeURIComponent(mensaje)}`;

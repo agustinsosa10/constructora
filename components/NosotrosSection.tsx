@@ -1,6 +1,6 @@
 import Image from "next/image";
 import ScrollReveal from "@/components/ScrollReveal";
-import { proyectos, calcularMetricas } from "@/data/proyectos";
+import { calcularMetricas } from "@/lib/metricas";
 
 // Clases de borde por ítem para 2 breakpoints:
 //   default (< md): grid 2 cols, 3 filas (2+2+2)
@@ -20,14 +20,16 @@ const METRIC_BORDER_CLASSES = [
   "py-6 border-[#1A1A1A]/10 pl-8",
 ];
 
-export default function NosotrosSection() {
+type Metricas = ReturnType<typeof calcularMetricas>
+
+export default function NosotrosSection({ metricas }: { metricas: Metricas }) {
   const {
     aniosTrayectoria,
     m2EnDesarrollo,
     proyectosEnDesarrollo,
     proyectosEntregados,
     totalProyectos,
-  } = calcularMetricas(proyectos);
+  } = metricas;
 
   const METRICAS = [
     { valor: `+${aniosTrayectoria}`, label: "Años de trayectoria" },

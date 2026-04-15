@@ -18,7 +18,13 @@ import {
   Star,
 } from "@phosphor-icons/react";
 import ScrollReveal from "@/components/ScrollReveal";
-import { Proyecto } from "@/data/proyectos";
+import type { SanityProyecto } from "@/lib/sanity/types";
+
+// Tipo de vista compatible con el componente: galeria y planoMaestro como strings[]
+type Proyecto = Omit<SanityProyecto, 'galeria' | 'planoMaestro'> & {
+  galeria: string[]
+  planoMaestro: string[]
+}
 
 // ── Icon map ────────────────────────────────────────────────────────────────
 const AMENITY_ICONS: Record<string, React.ElementType> = {
@@ -60,17 +66,27 @@ const SECTIONS = [
 function SubnavSticky({
   proyecto,
   showAvance,
+  showPlano,
+  showAmenities,
+  showGaleria,
 }: {
   proyecto: Proyecto;
   showAvance: boolean;
+  showPlano: boolean;
+  showAmenities: boolean;
+  showGaleria: boolean;
 }) {
   const [activeId, setActiveId] = useState("descripcion");
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const ids = SECTIONS.filter((s) => showAvance || s.id !== "avance").map(
-      (s) => s.id,
-    );
+    const ids = SECTIONS.filter(
+      (s) =>
+        (showAvance    || s.id !== "avance") &&
+        (showPlano     || s.id !== "plano") &&
+        (showAmenities || s.id !== "amenities") &&
+        (showGaleria   || s.id !== "galeria"),
+    ).map((s) => s.id);
 
     const observers: IntersectionObserver[] = [];
 
@@ -101,10 +117,14 @@ function SubnavSticky({
       observers.forEach((o) => o.disconnect());
       window.removeEventListener("scroll", onScroll);
     };
-  }, [showAvance]);
+  }, [showAvance, showPlano, showAmenities, showGaleria]);
 
   const visibleSections = SECTIONS.filter(
-    (s) => showAvance || s.id !== "avance",
+    (s) =>
+      (showAvance    || s.id !== "avance") &&
+      (showPlano     || s.id !== "plano") &&
+      (showAmenities || s.id !== "amenities") &&
+      (showGaleria   || s.id !== "galeria"),
   );
 
   function scrollTo(id: string) {
@@ -332,7 +352,7 @@ function SecDescripcion({ proyecto }: { proyecto: Proyecto }) {
               </div>
               <div>
                 <p className="text-[9px] text-[#aaa] font-bold tracking-[2px] uppercase mb-1">
-                  Entrega estimada
+                  {proyecto.estado === "Entregado" ? "Entregado en" : "Entrega estimada"}
                 </p>
                 <p className="text-[15px] text-[#1A1A1A] font-semibold">
                   {proyecto.anioEntrega}
@@ -347,6 +367,14 @@ function SecDescripcion({ proyecto }: { proyecto: Proyecto }) {
 }
 
 function SecAvance({ proyecto }: { proyecto: Proyecto }) {
+  const porcentajeTotal =
+    proyecto.fasesObra.length > 0
+      ? Math.round(
+          proyecto.fasesObra.reduce((acc, f) => acc + f.porcentaje, 0) /
+            proyecto.fasesObra.length
+        )
+      : 0;
+
   return (
     <section
       id="avance"
@@ -360,10 +388,10 @@ function SecAvance({ proyecto }: { proyecto: Proyecto }) {
         </ScrollReveal>
         <ScrollReveal delay={100}>
           <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-8 md:gap-16 items-start">
-            {/* Porcentaje grande */}
+            {/* Porcentaje global calculado */}
             <div>
               <div className="text-[56px] md:text-[72px] font-extrabold text-[#1A1A1A] tracking-[-3px] leading-none">
-                {proyecto.porcentajeAvance}
+                {porcentajeTotal}
                 <span className="text-[22px] font-semibold text-[#595959]">
                   %
                 </span>
@@ -373,15 +401,11 @@ function SecAvance({ proyecto }: { proyecto: Proyecto }) {
               </p>
             </div>
 
-            {/* Fases */}
+            {/* Fases individuales */}
             <div className="flex flex-col gap-5">
               {proyecto.fasesObra.map((fase) => {
-                const isPending = !fase.completada && !fase.activa;
-                const barWidth = fase.completada
-                  ? 100
-                  : fase.activa
-                    ? proyecto.porcentajeAvance
-                    : 0;
+                const isPending = fase.porcentaje === 0;
+                const isCompleted = fase.porcentaje === 100;
 
                 return (
                   <div
@@ -398,9 +422,9 @@ function SecAvance({ proyecto }: { proyecto: Proyecto }) {
                     <div className="h-[4px] bg-[#e0e0e0] relative">
                       <div
                         className={`absolute left-0 top-0 h-[4px] transition-all duration-500 ${
-                          fase.completada ? "bg-[#1A1A1A]" : "bg-[#C41230]"
+                          isCompleted ? "bg-[#1A1A1A]" : "bg-[#C41230]"
                         }`}
-                        style={{ width: `${barWidth}%` }}
+                        style={{ width: `${fase.porcentaje}%` }}
                       />
                     </div>
                     <span
@@ -408,11 +432,7 @@ function SecAvance({ proyecto }: { proyecto: Proyecto }) {
                         isPending ? "text-[#ccc]" : "text-[#1A1A1A]"
                       }`}
                     >
-                      {isPending
-                        ? "—"
-                        : fase.completada
-                          ? "100%"
-                          : `${barWidth}%`}
+                      {isPending ? "—" : `${fase.porcentaje}%`}
                     </span>
                   </div>
                 );
@@ -730,8 +750,8 @@ function SecPlano({ proyecto }: { proyecto: Proyecto }) {
 }
 
 function SecUbicacion({ proyecto }: { proyecto: Proyecto }) {
-  const { lat, lng, direccion } = proyecto.ubicacion;
-  const mapsUrl = `https://maps.google.com/maps?q=${lat},${lng}&output=embed`;
+  const { direccion, mapUrl } = proyecto.ubicacion;
+  const mapsSearchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(direccion)}`;
 
   return (
     <section
@@ -749,7 +769,7 @@ function SecUbicacion({ proyecto }: { proyecto: Proyecto }) {
                 {direccion}
               </p>
               <a
-                href={`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`}
+                href={mapsSearchUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block bg-[#C41230] text-white text-[11px] font-bold tracking-[1px] uppercase px-6 py-3 hover:bg-red-800 transition-colors self-start"
@@ -757,19 +777,21 @@ function SecUbicacion({ proyecto }: { proyecto: Proyecto }) {
                 Ver en Google Maps →
               </a>
             </div>
-            <div className="w-full aspect-[16/9]">
-              <iframe
-                src={mapsUrl}
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Mapa de ubicación"
-                className="w-full h-full"
-              />
-            </div>
+            {mapUrl && (
+              <div className="w-full aspect-[16/9]">
+                <iframe
+                  src={mapUrl}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Mapa de ubicación"
+                  className="w-full h-full"
+                />
+              </div>
+            )}
           </div>
         </ScrollReveal>
       </div>
@@ -868,12 +890,20 @@ export default function ProyectoPageClient({
 }: {
   proyecto: Proyecto;
 }) {
-  const showAvance =
-    proyecto.estado === "En construccion" && proyecto.porcentajeAvance > 0;
+  const showAvance    = proyecto.estado === "En construccion" && (proyecto.fasesObra?.length ?? 0) > 0;
+  const showPlano     = (proyecto.planoMaestro?.length ?? 0) > 0;
+  const showAmenities = (proyecto.amenities?.length ?? 0) > 0;
+  const showGaleria   = (proyecto.galeria?.length ?? 0) > 0;
 
   return (
     <>
-      <SubnavSticky proyecto={proyecto} showAvance={showAvance} />
+      <SubnavSticky
+        proyecto={proyecto}
+        showAvance={showAvance}
+        showPlano={showPlano}
+        showAmenities={showAmenities}
+        showGaleria={showGaleria}
+      />
 
       {/* Hero */}
       <div className="relative h-[55vh] md:h-[860px] mt-[72px] bg-[#1A1A1A]">
@@ -973,10 +1003,10 @@ export default function ProyectoPageClient({
       {/* Secciones */}
       <main>
         <SecDescripcion proyecto={proyecto} />
-        {showAvance && <SecAvance proyecto={proyecto} />}
-        <SecAmenities proyecto={proyecto} />
-        <SecGaleria proyecto={proyecto} />
-        <SecPlano proyecto={proyecto} />
+        {showAvance    && <SecAvance    proyecto={proyecto} />}
+        {showAmenities && <SecAmenities proyecto={proyecto} />}
+        {showGaleria   && <SecGaleria   proyecto={proyecto} />}
+        {showPlano     && <SecPlano     proyecto={proyecto} />}
         <SecUbicacion proyecto={proyecto} />
         <SecContacto proyecto={proyecto} />
       </main>
