@@ -35,7 +35,7 @@ const TABS: { key: EstadoTab; label: string }[] = [
   { key: "Entregado", label: "Entregados" },
 ];
 
-function ProyectoCard({ proyecto }: { proyecto: Proyecto }) {
+function ProyectoCard({ proyecto, index }: { proyecto: Proyecto; index: number }) {
   return (
     <Link
       href={`/proyectos/${proyecto.slug}`}
@@ -49,6 +49,7 @@ function ProyectoCard({ proyecto }: { proyecto: Proyecto }) {
           src={proyecto.imagenHero}
           alt={proyecto.nombre}
           fill
+          priority={index < 3}
           className={`object-cover transition-transform duration-500 group-hover:scale-[1.04] ${
             proyecto.estado === "Entregado" ? "[filter:grayscale(35%)]" : ""
           }`}
@@ -180,7 +181,7 @@ function ProyectosInner({ proyectos }: { proyectos: Proyecto[] }) {
             <div className="grid gap-x-6 gap-y-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {proyectosFiltrados.map((p, i) => (
                 <ScrollReveal key={p.slug} delay={i * 80} className="w-full">
-                  <ProyectoCard proyecto={p} />
+                  <ProyectoCard proyecto={p} index={i} />
                 </ScrollReveal>
               ))}
             </div>
