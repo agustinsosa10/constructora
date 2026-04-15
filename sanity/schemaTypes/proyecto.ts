@@ -128,7 +128,7 @@ export const proyecto = defineType({
         defineField({
           name: 'mapUrl',
           title: 'URL del mapa (embed de Google Maps)',
-          description: 'En Google Maps: Compartir → Insertar mapa → copiá el valor del atributo src del iframe',
+          description: `En Google Maps: Compartir → Incorporar mapa → copiá el valor del atributo src del iframe, borra todo lo demas y deja solo la url que comienza con "https" y termina con "sar"`,
           type: 'url',
           validation: (R) => R.required(),
         }),
