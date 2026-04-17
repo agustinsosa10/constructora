@@ -957,7 +957,7 @@ export default function ProyectoPageClient({
               <div className="flex gap-8 items-center flex-wrap">
                 <div className="flex flex-col gap-1">
                   <span className="text-white/60 text-[9px] font-bold tracking-[2px] uppercase">
-                    Entrega estimada
+                    {proyecto.estado === "Entregado" ? "Entregado en" : "Entrega estimada"}
                   </span>
                   <span className="text-white text-[14px] font-bold">
                     {proyecto.anioEntrega}

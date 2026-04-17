@@ -24,7 +24,7 @@ export const proyecto = defineType({
       type: 'string',
       options: {
         list: [
-          { title: 'En construcción', value: 'En construccion' },
+          { title: 'En desarrollo', value: 'En construccion' },
           { title: 'Entregado', value: 'Entregado' },
           { title: 'Próximo lanzamiento', value: 'Proximo lanzamiento' },
         ],
@@ -141,9 +141,17 @@ export const proyecto = defineType({
     }),
     defineField({
       name: 'fasesObra',
-      title: 'Fases de obra (Opcional)',
+      title: 'Fases de obra (Solo obligatorio cuando el estado es "En desarrollo")',
       type: 'array',
       of: [{ type: 'faseObra' }],
+      validation: (R) =>
+        R.custom((value, context) => {
+          const doc = context.document as { estado?: string }
+          if (doc?.estado === 'En construccion' && (!value || (value as unknown[]).length === 0)) {
+            return 'Las fases de obra son obligatorias cuando el estado es "En desarrollo"'
+          }
+          return true
+        }),
     }),
   ],
   preview: {
